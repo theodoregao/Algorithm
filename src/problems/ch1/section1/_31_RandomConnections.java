@@ -1,4 +1,4 @@
-package problems.ch1;
+package problems.ch1.section1;
 
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;

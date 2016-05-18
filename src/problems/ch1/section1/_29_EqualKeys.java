@@ -1,4 +1,4 @@
-package problems.ch1;
+package problems.ch1.section1;
 
 import java.util.Arrays;
 
