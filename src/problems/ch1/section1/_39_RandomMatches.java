@@ -33,7 +33,7 @@ public class _39_RandomMatches {
             }
             Arrays.sort(data1);
             Arrays.sort(data2);
-            count += BinarySearch.indexOf(data2, data1[0]) >= 0 ? 1 : 0;
+//            count += BinarySearch.indexOf(data2, data1[0]) >= 0 ? 1 : 0;
 //            for (int i = 1; i < n; i++)
 //                if (data1[i] != data1[i - 1] && BinarySearch.indexOf(data2, data1[i]) >= 0) count++;
 
