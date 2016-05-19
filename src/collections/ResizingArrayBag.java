@@ -1,9 +1,8 @@
 package collections;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public class ResizingArrayStack<Item> implements Stack<Item> {
+public class ResizingArrayBag<Item> implements Bag<Item> {
     
     private static final int DEFAULT_SIZE = 16;
     
@@ -16,18 +15,9 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     }
 
     @Override
-    public void push(Item item) {
-        if (size == items.length) expand();
+    public void add(Item item) {
+        if (size == items.length) resize(items.length * 2);
         items[size++] = item;
-    }
-
-    @Override
-    public Item pop() {
-        if (size == 0) throw new NoSuchElementException();
-        Item item = items[--size];
-        items[size] = null;
-        if (size <= items.length / 4 && size > DEFAULT_SIZE) shrink();
-        return item;
     }
 
     @Override
@@ -45,14 +35,6 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
         for (int i = 0; i < size; i++) newItems[i] = items[i];
         items = newItems;
     }
-
-    private void shrink() {
-        if (size <= items.length / 4 && items.length > DEFAULT_SIZE) resize(size / 2);
-    }
-    
-    private void expand() {
-        if (size == items.length) resize(size * 2);
-    }
     
     private class ReverseArrayIterator implements Iterator<Item> {
         
@@ -69,4 +51,5 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
         }
         
     }
+
 }
