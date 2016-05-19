@@ -5,4 +5,5 @@ public interface Stack<Item> extends Iterable<Item> {
     Item pop();
     boolean isEmpty();
     int size();
+    Item peek();
 }

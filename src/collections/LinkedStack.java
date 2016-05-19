@@ -29,6 +29,12 @@ public class LinkedStack<Item> implements Stack<Item> {
     }
 
     @Override
+    public Item peek() {
+        if (size == 0) throw new NoSuchElementException();
+        return first.item;
+    }
+
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }

@@ -31,6 +31,12 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     }
 
     @Override
+    public Item peek() {
+        if (size == 0) throw new NoSuchElementException();
+        return items[size - 1];
+    }
+
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
