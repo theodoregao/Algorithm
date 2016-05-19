@@ -1,8 +1,9 @@
 package collections;
 
 import java.util.Iterator;
+import java.util.Random;
 
-public class ResizingArrayBag<Item> implements Bag<Item> {
+public class RandomBag<Item> implements Bag<Item> {
 
     private static final int DEFAULT_SIZE = 16;
 
@@ -41,6 +42,10 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
     private class ReverseArrayIterator implements Iterator<Item> {
 
         private int index = size;
+        
+        ReverseArrayIterator() {
+            StdRandom.shuffle(items, 0, size - 1);
+        }
 
         @Override
         public boolean hasNext() {
@@ -60,7 +65,7 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
     }
 
     public static void main(String[] args) {
-        Bag<Integer> bag = new ResizingArrayBag<Integer>();
+        Bag<Integer> bag = new RandomBag<Integer>();
         for (int i = 0; i < 10; i++)
             bag.add(i);
         for (int i : bag)

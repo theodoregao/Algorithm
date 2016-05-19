@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ResizingArrayStack<Item> implements Stack<Item> {
-    
+
     private static final int DEFAULT_SIZE = 16;
-    
+
     private Item[] items = (Item[]) new Object[DEFAULT_SIZE];
     private int size = 0;
 
@@ -17,22 +17,26 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
 
     @Override
     public void push(Item item) {
-        if (size == items.length) expand();
+        if (size == items.length)
+            expand();
         items[size++] = item;
     }
 
     @Override
     public Item pop() {
-        if (size == 0) throw new NoSuchElementException();
+        if (size == 0)
+            throw new NoSuchElementException();
         Item item = items[--size];
         items[size] = null;
-        if (size <= items.length / 4 && size > DEFAULT_SIZE) shrink();
+        if (size <= items.length / 4 && size > DEFAULT_SIZE)
+            shrink();
         return item;
     }
 
     @Override
     public Item peek() {
-        if (size == 0) throw new NoSuchElementException();
+        if (size == 0)
+            throw new NoSuchElementException();
         return items[size - 1];
     }
 
@@ -45,23 +49,26 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     public int size() {
         return size;
     }
-    
+
     private void resize(int max) {
         Item[] newItems = (Item[]) new Object[max];
-        for (int i = 0; i < size; i++) newItems[i] = items[i];
+        for (int i = 0; i < size; i++)
+            newItems[i] = items[i];
         items = newItems;
     }
 
     private void shrink() {
-        if (size <= items.length / 4 && items.length > DEFAULT_SIZE) resize(size / 2);
+        if (size <= items.length / 4 && items.length > DEFAULT_SIZE)
+            resize(size / 2);
     }
-    
+
     private void expand() {
-        if (size == items.length) resize(size * 2);
+        if (size == items.length)
+            resize(size * 2);
     }
-    
+
     private class ReverseArrayIterator implements Iterator<Item> {
-        
+
         private int index = size;
 
         @Override
@@ -78,6 +85,16 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
         public void remove() {
             throw new UnsupportedOperationException();
         }
-        
+
+    }
+
+    public static void main(String[] args) {
+        Stack<Integer> stack = new ResizingArrayStack<Integer>();
+        for (int i = 0; i < 10; i++)
+            stack.push(i);
+        for (int i : stack)
+            System.out.println(i);
+        while (!stack.isEmpty())
+            System.out.println(stack.pop());
     }
 }

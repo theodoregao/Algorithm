@@ -2,11 +2,12 @@ package collections;
 
 import java.util.Iterator;
 
-public class ResizingArrayBag<Item> implements Bag<Item> {
+public class ResizingArrayQueue<Item> implements Queue<Item> {
 
     private static final int DEFAULT_SIZE = 16;
 
     private Item[] items = (Item[]) new Object[DEFAULT_SIZE];
+    private int first = 0;
     private int size = 0;
 
     @Override
@@ -15,10 +16,15 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
     }
 
     @Override
-    public void add(Item item) {
-        if (size == items.length)
-            resize(items.length * 2);
-        items[size++] = item;
+    public void enqueue(Item item) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Item dequeue() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -36,6 +42,16 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
         for (int i = 0; i < size; i++)
             newItems[i] = items[i];
         items = newItems;
+    }
+    
+    private void shrink() {
+        if (size <= items.length / 4 && items.length > DEFAULT_SIZE)
+            resize(size / 2);
+    }
+
+    private void expand() {
+        if (size == items.length)
+            resize(size * 2);
     }
 
     private class ReverseArrayIterator implements Iterator<Item> {
@@ -60,11 +76,6 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
     }
 
     public static void main(String[] args) {
-        Bag<Integer> bag = new ResizingArrayBag<Integer>();
-        for (int i = 0; i < 10; i++)
-            bag.add(i);
-        for (int i : bag)
-            System.out.println(i);
     }
 
 }

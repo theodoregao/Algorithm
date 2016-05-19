@@ -4,36 +4,33 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class LinkedQueue<Item> implements Queue<Item> {
-    
+
     private Node<Item> first;
     private Node<Item> last;
     private int size = 0;
 
     @Override
     public Iterator<Item> iterator() {
-        return new ListIterator<Item>(first);
+        return new LinkedNodeIterator<Item>(first);
     }
 
     @Override
     public void enqueue(Item item) {
-        Node<Item> newNode = new Node<Item>(item, null);
-        if (isEmpty()) {
-            first = newNode;
-            last = newNode;
-        }
-        else {
-            last.next = newNode;
-            last = newNode;
-        }
+        if (first == null)
+            first = last = new Node<Item>(item, null);
+        else
+            last = last.next = new Node<Item>(item, null);
         size++;
     }
 
     @Override
     public Item dequeue() {
-        if (size == 0) throw new NoSuchElementException();
+        if (size == 0)
+            throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
-        if (size == 1) last = null;
+        if (size == 1)
+            last = null;
         size--;
         return item;
     }
@@ -46,6 +43,16 @@ public class LinkedQueue<Item> implements Queue<Item> {
     @Override
     public int size() {
         return size;
+    }
+
+    public static void main(String[] args) {
+        Queue<Integer> queue = new LinkedQueue<Integer>();
+        for (int i = 0; i < 10; i++)
+            queue.enqueue(i);
+        for (int i : queue)
+            System.out.println(i);
+        while (!queue.isEmpty())
+            System.out.println(queue.dequeue());
     }
 
 }

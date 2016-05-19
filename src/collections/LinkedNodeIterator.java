@@ -2,23 +2,30 @@ package collections;
 
 import java.util.Iterator;
 
-class ListIterator<Item> implements Iterator<Item> {
+class LinkedNodeIterator<Item> implements Iterator<Item> {
     
     private Node<Item> current;
+    private int size;
     
-    public ListIterator(Node<Item> node) {
-        current = node;
+    public LinkedNodeIterator(Node<Item> current) {
+        this(current,  Integer.MAX_VALUE);
+    }
+    
+    public LinkedNodeIterator(Node<Item> current, int size) {
+        this.current = current;
+        this.size = size;
     }
 
     @Override
     public boolean hasNext() {
-        return current != null;
+        return current != null && size > 0;
     }
 
     @Override
     public Item next() {
         Item item = current.item;
         current = current.next;
+        size--;
         return item;
     }
 
