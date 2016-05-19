@@ -73,6 +73,11 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
         public Item next() {
             return items[--index];
         }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
         
     }
 }

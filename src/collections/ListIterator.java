@@ -22,4 +22,9 @@ class ListIterator<Item> implements Iterator<Item> {
         return item;
     }
 
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
 }

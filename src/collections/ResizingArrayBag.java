@@ -49,6 +49,11 @@ public class ResizingArrayBag<Item> implements Bag<Item> {
         public Item next() {
             return items[--index];
         }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
         
     }
 
