@@ -3,7 +3,7 @@ package collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ResizingArrayQueue<Item> implements Queue<Item> {
+public class RandomQueue<Item> implements Iterable<Item> {
 
     private static final int DEFAULT_SIZE = 16;
 
@@ -13,32 +13,41 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return new ArrayIterator();
+        return new RandomIterator();
     }
 
-    @Override
     public void enqueue(Item item) {
         if (first + size == items.length) resize();
         items[first + size++] = item;
     }
 
-    @Override
     public Item dequeue() {
         if (size == 0) throw new NoSuchElementException();
-        Item item = items[first];
+        Item item = sample();
         items[first] = null;
         first++;
         size--;
         if (size <= items.length / 4 && items.length > DEFAULT_SIZE) resize();
         return item;
     }
+    
+    private Item sample() {
+        return sample(0);
+    }
+    
+    public Item sample(int index) {
+        if (size == 0) throw new NoSuchElementException();
+        int position = StdRandom.uniform(size - index);
+        Item item = items[first + index + position];
+        items[first + index + position] = items[first + index];
+        items[first + index] = item;
+        return item;
+    }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
     public int size() {
         return size;
     }
@@ -52,15 +61,12 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     private void resize(int max) {
         Item[] newItems = items;
         if (max != items.length) newItems = (Item[]) new Object[max];
-        for (int i = 0; i < size; i++) {
-            newItems[i] = items[first + i];
-            items[first + i] = null;
-        }
+        for (int i = 0; i < size; i++) newItems[i] = items[first + i];
         first = 0;
         items = newItems;
     }
 
-    private class ArrayIterator implements Iterator<Item> {
+    private class RandomIterator implements Iterator<Item> {
 
         private int index = 0;
 
@@ -71,7 +77,7 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
 
         @Override
         public Item next() {
-            return items[first + index++];
+            return sample(index++);
         }
 
         @Override
@@ -82,15 +88,23 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     }
 
     public static void main(String[] args) {
-        Queue<Integer> queue = new ResizingArrayQueue<Integer>();
-        for (int i = 0; i < 1000; i++) {
-            queue.enqueue(i);
-        }
+        RandomQueue<Integer> randomQueue = new RandomQueue<Integer>();
+        for (int i = 0; i < 10; i++) randomQueue.enqueue(i);
         
-        for (int i = 0; i < 1000; i++) {
-            if (queue.dequeue() != i) System.out.println("error");
-        }
+        System.out.println(randomQueue.size);
+        System.out.println();
+        for (int i: randomQueue) System.out.println(i);
         
+        System.out.println();
+        for (int i = 0; i < 10; i++) System.out.println(randomQueue.sample());
+        
+        System.out.println();
+        while (!randomQueue.isEmpty()) System.out.println(randomQueue.dequeue());
+        
+        System.out.println();
+        randomQueue = new RandomQueue<Integer>();
+        for (int i = 0; i < 10; i++) randomQueue.enqueue(i);
+        while (!randomQueue.isEmpty()) System.out.println(randomQueue.dequeue());
     }
 
 }

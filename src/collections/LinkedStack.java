@@ -21,8 +21,7 @@ public class LinkedStack<Item> implements Stack<Item> {
 
     @Override
     public Item pop() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
         size--;
@@ -31,8 +30,7 @@ public class LinkedStack<Item> implements Stack<Item> {
 
     @Override
     public Item peek() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         return first.item;
     }
 
@@ -48,12 +46,9 @@ public class LinkedStack<Item> implements Stack<Item> {
 
     public static void main(String[] args) {
         Stack<Integer> stack = new LinkedStack<Integer>();
-        for (int i = 0; i < 10; i++)
-            stack.push(i);
-        for (int i : stack)
-            System.out.println(i);
-        while (!stack.isEmpty())
-            System.out.println(stack.pop());
+        for (int i = 0; i < 10; i++) stack.push(i);
+        for (int i : stack) System.out.println(i);
+        while (!stack.isEmpty()) System.out.println(stack.pop());
     }
 
 }

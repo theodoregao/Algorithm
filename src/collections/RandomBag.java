@@ -12,13 +12,12 @@ public class RandomBag<Item> implements Bag<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return new ReverseArrayIterator();
+        return new RandomIterator();
     }
 
     @Override
     public void add(Item item) {
-        if (size == items.length)
-            resize(items.length * 2);
+        if (size == items.length) resize(items.length * 2);
         items[size++] = item;
     }
 
@@ -34,27 +33,26 @@ public class RandomBag<Item> implements Bag<Item> {
 
     private void resize(int max) {
         Item[] newItems = (Item[]) new Object[max];
-        for (int i = 0; i < size; i++)
-            newItems[i] = items[i];
+        for (int i = 0; i < size; i++) newItems[i] = items[i];
         items = newItems;
     }
 
-    private class ReverseArrayIterator implements Iterator<Item> {
+    private class RandomIterator implements Iterator<Item> {
 
-        private int index = size;
+        private int index = 0;
         
-        ReverseArrayIterator() {
+        RandomIterator() {
             StdRandom.shuffle(items, 0, size - 1);
         }
 
         @Override
         public boolean hasNext() {
-            return index > 0;
+            return index < size;
         }
 
         @Override
         public Item next() {
-            return items[--index];
+            return items[index++];
         }
 
         @Override
@@ -66,10 +64,9 @@ public class RandomBag<Item> implements Bag<Item> {
 
     public static void main(String[] args) {
         Bag<Integer> bag = new RandomBag<Integer>();
-        for (int i = 0; i < 10; i++)
-            bag.add(i);
-        for (int i : bag)
-            System.out.println(i);
+        for (int i = 0; i < 100; i++) bag.add(i);
+        for (int i : bag) System.out.println(i);
+        System.out.println(bag.size());
     }
 
 }

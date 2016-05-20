@@ -30,10 +30,8 @@ public class LinkedBag<Item> implements Bag<Item> {
 
     public static void main(String[] args) {
         Bag<Integer> bag = new LinkedBag<Integer>();
-        for (int i = 0; i < 10; i++)
-            bag.add(i);
-        for (int i : bag)
-            System.out.println(i);
+        for (int i = 0; i < 10; i++) bag.add(i);
+        for (int i : bag) System.out.println(i);
     }
 
 }

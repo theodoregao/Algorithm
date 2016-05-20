@@ -16,21 +16,17 @@ public class LinkedQueue<Item> implements Queue<Item> {
 
     @Override
     public void enqueue(Item item) {
-        if (first == null)
-            first = last = new Node<Item>(item, null);
-        else
-            last = last.next = new Node<Item>(item, null);
+        if (first == null) first = last = new Node<Item>(item, null);
+        else last = last.next = new Node<Item>(item, null);
         size++;
     }
 
     @Override
     public Item dequeue() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
-        if (size == 1)
-            last = null;
+        if (size == 1) last = null;
         size--;
         return item;
     }
@@ -47,12 +43,9 @@ public class LinkedQueue<Item> implements Queue<Item> {
 
     public static void main(String[] args) {
         Queue<Integer> queue = new LinkedQueue<Integer>();
-        for (int i = 0; i < 10; i++)
-            queue.enqueue(i);
-        for (int i : queue)
-            System.out.println(i);
-        while (!queue.isEmpty())
-            System.out.println(queue.dequeue());
+        for (int i = 0; i < 10; i++) queue.enqueue(i);
+        for (int i : queue) System.out.println(i);
+        while (!queue.isEmpty()) System.out.println(queue.dequeue());
     }
 
 }

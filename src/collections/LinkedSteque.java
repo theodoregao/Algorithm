@@ -17,15 +17,13 @@ public class LinkedSteque<Item> implements Steque<Item> {
     @Override
     public void push(Item item) {
         first = new Node<Item>(item, first);
-        if (last == null)
-            last = first;
+        if (last == null) last = first;
         size++;
     }
 
     @Override
     public void enqueue(Item item) {
-        if (last == null)
-            push(item);
+        if (last == null) push(item);
         else {
             last = last.next = new Node<Item>(item, null);
             size++;
@@ -34,20 +32,17 @@ public class LinkedSteque<Item> implements Steque<Item> {
 
     @Override
     public Item pop() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
-        if (first == null)
-            last = null;
+        if (first == null) last = null;
         size--;
         return item;
     }
 
     @Override
     public Item peek() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         return first.item;
     }
 
@@ -64,15 +59,12 @@ public class LinkedSteque<Item> implements Steque<Item> {
     public static void main(String[] args) {
         Steque<Integer> steque = new LinkedSteque<Integer>();
         for (int i = 0; i < 10; i++) {
-            if (i % 2 == 0)
-                steque.enqueue(i);
-            else
-                steque.push(i);
+            if (i % 2 == 0) steque.enqueue(i);
+            else steque.push(i);
         }
-        for (int i : steque)
-            System.out.println(i);
-        while (!steque.isEmpty())
-            System.out.println(steque.pop());
+        for (int i : steque) System.out.println(i);
+        System.out.println();
+        while (!steque.isEmpty()) System.out.println(steque.pop());
     }
 
 }

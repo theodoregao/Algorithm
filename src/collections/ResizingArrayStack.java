@@ -17,26 +17,22 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
 
     @Override
     public void push(Item item) {
-        if (size == items.length)
-            expand();
+        if (size == items.length) resize(size * 2);
         items[size++] = item;
     }
 
     @Override
     public Item pop() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         Item item = items[--size];
         items[size] = null;
-        if (size <= items.length / 4 && size > DEFAULT_SIZE)
-            shrink();
+        if (size <= items.length / 4 && size > DEFAULT_SIZE) resize(size / 2);
         return item;
     }
 
     @Override
     public Item peek() {
-        if (size == 0)
-            throw new NoSuchElementException();
+        if (size == 0) throw new NoSuchElementException();
         return items[size - 1];
     }
 
@@ -52,19 +48,8 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
 
     private void resize(int max) {
         Item[] newItems = (Item[]) new Object[max];
-        for (int i = 0; i < size; i++)
-            newItems[i] = items[i];
+        for (int i = 0; i < size; i++) newItems[i] = items[i];
         items = newItems;
-    }
-
-    private void shrink() {
-        if (size <= items.length / 4 && items.length > DEFAULT_SIZE)
-            resize(size / 2);
-    }
-
-    private void expand() {
-        if (size == items.length)
-            resize(size * 2);
     }
 
     private class ReverseArrayIterator implements Iterator<Item> {
@@ -90,11 +75,8 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
 
     public static void main(String[] args) {
         Stack<Integer> stack = new ResizingArrayStack<Integer>();
-        for (int i = 0; i < 10; i++)
-            stack.push(i);
-        for (int i : stack)
-            System.out.println(i);
-        while (!stack.isEmpty())
-            System.out.println(stack.pop());
+        for (int i = 0; i < 10; i++) stack.push(i);
+        for (int i : stack) System.out.println(i);
+        while (!stack.isEmpty()) System.out.println(stack.pop());
     }
 }
