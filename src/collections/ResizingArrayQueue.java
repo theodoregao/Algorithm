@@ -10,6 +10,14 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     private Item[] items = (Item[]) new Object[DEFAULT_SIZE];
     private int first = 0;
     private int size = 0;
+    
+    public ResizingArrayQueue() {
+        
+    }
+    
+    public ResizingArrayQueue(Queue<Item> queue) {
+        for (Item item: queue) enqueue(item);
+    }
 
     @Override
     public Iterator<Item> iterator() {
@@ -83,14 +91,13 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
 
     public static void main(String[] args) {
         Queue<Integer> queue = new ResizingArrayQueue<Integer>();
-        for (int i = 0; i < 1000; i++) {
-            queue.enqueue(i);
-        }
+        for (int i = 0; i < 1000; i++) queue.enqueue(i);
+        for (int i: new ResizingArrayQueue<>(queue)) System.out.println(i);
         
+        System.out.println();
         for (int i = 0; i < 1000; i++) {
             if (queue.dequeue() != i) System.out.println("error");
         }
-        
     }
 
 }

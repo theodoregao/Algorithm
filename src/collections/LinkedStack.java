@@ -7,6 +7,16 @@ public class LinkedStack<Item> implements Stack<Item> {
 
     private Node<Item> first;
     private int size = 0;
+    
+    public LinkedStack() {
+        
+    }
+    
+    public LinkedStack(Stack<Item> stack) {
+        Stack<Item> tempStack = new LinkedStack<>();
+        for (Item item: stack) tempStack.push(item);
+        while (!tempStack.isEmpty()) push(tempStack.pop());
+    }
 
     @Override
     public Iterator<Item> iterator() {
@@ -47,7 +57,8 @@ public class LinkedStack<Item> implements Stack<Item> {
     public static void main(String[] args) {
         Stack<Integer> stack = new LinkedStack<Integer>();
         for (int i = 0; i < 10; i++) stack.push(i);
-        for (int i : stack) System.out.println(i);
+        for (int i : new LinkedStack<>(stack)) System.out.println(i);
+        System.out.println();
         while (!stack.isEmpty()) System.out.println(stack.pop());
     }
 

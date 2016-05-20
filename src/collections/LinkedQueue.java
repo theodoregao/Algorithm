@@ -8,6 +8,14 @@ public class LinkedQueue<Item> implements Queue<Item> {
     private Node<Item> first;
     private Node<Item> last;
     private int size = 0;
+    
+    public LinkedQueue() {
+        
+    }
+    
+    public LinkedQueue(Queue<Item> queue) {
+        for (Item item: queue) enqueue(item);
+    }
 
     @Override
     public Iterator<Item> iterator() {
