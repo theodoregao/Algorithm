@@ -9,17 +9,16 @@ public class _10_BinarySearchMinimalIndex {
     static int binarySearch(int[] a, int key) {
         int lo = 0;
         int hi = a.length - 1;
-        int mid;
+        int mid = (lo + hi) / 2;
         
-        while (lo < hi) {
+        while (lo <= hi) {
+            if (key <= a[mid]) hi = mid - 1;
+            else if (key > a[mid]) lo = mid + 1;
             mid = (lo + hi) / 2;
-            if (a[mid] < key) lo = mid + 1;
-            else if (a[mid] > key) hi = mid - 1;
-            else hi = mid;
         }
         
-        if (a[hi] == key) return hi;
-        else return -lo;
+        if (lo >= 0 && lo < a.length && a[lo] == key) return lo;
+        else return -lo - 1;
     }
     
     public static void main(String[] args) {

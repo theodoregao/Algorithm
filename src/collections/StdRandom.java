@@ -1,5 +1,6 @@
 package collections;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -454,6 +455,23 @@ public final class StdRandom {
             a[i] = a[r];
             a[r] = temp;
         }
+    }
+    
+    public static int[] sample(int min, int max, int size) {
+        if (min < max || max - min < size) return null;
+        int[] a = new int[max - min];
+        for (int i = 0; i < a.length; i++) a[i] = min + i;
+        shuffle(a);
+        return Arrays.copyOf(a, size);
+    }
+    
+    public static double[] sample(double min, double delta, int size) {
+        if (size <= 1) return null;
+        double[] a = new double[size];
+        a[0] = min + uniform() * delta * 2;
+        for (int i = 1; i < size; i++) a[i] = a[i - 1] + uniform() * delta * 2;
+        shuffle(a);
+        return a;
     }
 
     /**
