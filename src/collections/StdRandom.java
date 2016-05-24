@@ -458,7 +458,7 @@ public final class StdRandom {
     }
     
     public static int[] sample(int min, int max, int size) {
-        if (min < max || max - min < size) return null;
+        if (min > max || max - min < size) return null;
         int[] a = new int[max - min];
         for (int i = 0; i < a.length; i++) a[i] = min + i;
         shuffle(a);
