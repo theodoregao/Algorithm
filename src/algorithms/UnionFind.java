@@ -23,6 +23,8 @@ public class UnionFind {
         if (i == j) return;
         if (sizes[i] < sizes[j]) { ids[i] = j; sizes[j] += sizes[i]; }
         else { ids[j] = i; sizes[i] += sizes[j]; }
+//        if (i < j) ids[i] = j;
+//        else ids[j] = i;
         count--;
     }
     
@@ -52,5 +54,6 @@ public class UnionFind {
             if (unionFind.count == 1) break;
         }
         System.out.println(unionFind.count() + " components " + k);
+//        for (int i = 0; i < 1000; i++) System.out.println(unionFind.find(i));
     }
 }
