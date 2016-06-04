@@ -11,23 +11,20 @@ public class Percolation {
 
     private int n;
     private boolean[] mSites;
+    private boolean[] mBottom;
     private WeightedQuickUnionUF mUnionFind;
-    private WeightedQuickUnionUF mUnionFindTop;
     private int mTop;
-    private int mBottom;
 
     public Percolation(int N) {
         if (N <= 0) throw new IllegalArgumentException();
         n = N;
-        mSites = new boolean[N * N + 2];
+        mSites = new boolean[N * N + 1];
+        mBottom = new boolean[N * N + 1];
         mTop = N * N;
-        mBottom = mTop + 1;
-        mUnionFind = new WeightedQuickUnionUF(N * N + 2);
-        mUnionFindTop = new WeightedQuickUnionUF(N * N + 2);
+        mUnionFind = new WeightedQuickUnionUF(N * N + 1);
         for (int i = 1; i <= N; i++) {
-            mUnionFindTop.union(mTop, getSite(1, i));
             mUnionFind.union(mTop, getSite(1, i));
-            mUnionFind.union(mBottom, getSite(N, i));
+            mBottom[getSite(N, i)] = true;
         }
     }
     
@@ -44,14 +41,16 @@ public class Percolation {
         
         if (i == 1) mSites[mTop] = true;
 
+        boolean isConnectToBottom = mBottom[site] | mBottom[mUnionFind.find(site)];
         for (int k = 0; k < DIRECTIONS.length; k++) {
             int row = i + DIRECTIONS[k][0];
             int col = j + DIRECTIONS[k][1];
             if (isAvailableSite(row, col) && isOpen(row, col)) {
+                isConnectToBottom |= mBottom[mUnionFind.find(getSite(row, col))];
                 mUnionFind.union(getSite(row, col), site);
-                mUnionFindTop.union(getSite(row, col), site);
             }
         }
+        mBottom[mUnionFind.find(site)] = isConnectToBottom;
     }
     
     private boolean isAvailableSite(int row, int col) {
@@ -70,11 +69,11 @@ public class Percolation {
 
     public boolean isFull(int i, int j) {
         if (!isAvailableSite(i, j)) throw new IndexOutOfBoundsException();
-        return isOpen(i, j) && mUnionFindTop.connected(mTop, getSite(i, j));
+        return isOpen(i, j) && mUnionFind.connected(mTop, getSite(i, j));
     }
 
     public boolean percolates() {
-        return isOpen(mTop) && mUnionFind.connected(mTop, mBottom);
+        return mBottom[mUnionFind.find(mTop)];
     }
 
     public static void main(String[] args) {
