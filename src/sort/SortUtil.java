@@ -1,7 +1,5 @@
 package sort;
 
-import java.util.Arrays;
-
 import collections.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
 
@@ -11,6 +9,12 @@ class SortUtil {
         Comparable temp = comparables[i];
         comparables[i] = comparables[j];
         comparables[j] = temp;
+    }
+    
+    static void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
     
     static boolean less(Comparable a, Comparable b) {
@@ -25,13 +29,13 @@ class SortUtil {
     }
 
     public static void main(String[] args) {
-        int size = 1000000;
+        int size = 10000000;
         int[] num = StdRandom.sample(0, size * 10, size);
-        Arrays.sort(num);
+//        Arrays.sort(num);
         Stopwatch stopwatch = new Stopwatch();
         Integer[] nums = new Integer[size];
         for (int i = 0; i < nums.length; i++) nums[i] = num[i];
-        MergeSort.bottomUpSort(nums);
+        MergeSort.sort(nums);
         System.out.println(stopwatch.elapsedTime());
         System.out.println("sorted " + SortUtil.isSorted(nums));
     }

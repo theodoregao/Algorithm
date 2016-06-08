@@ -11,5 +11,15 @@ public class SelectionSort {
             SortUtil.swap(comparables, i, min);
         }
     }
+    
+    public static void sort(int[] ints) {
+        int n = ints.length;
+        for (int i = 0; i < n; i++) {
+            int min = i;
+            for (int j = i + 1; j < n; j++)
+                if (ints[j] < ints[min]) min = j;
+            SortUtil.swap(ints, i, min);
+        }
+    }
 
 }

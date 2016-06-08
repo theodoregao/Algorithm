@@ -23,6 +23,12 @@ public class LinkedQueue<Item> implements Queue<Item> {
     }
 
     @Override
+    public Item peek() {
+        if (size == 0) throw new NoSuchElementException();
+        return first.item;
+    }
+
+    @Override
     public void enqueue(Item item) {
         if (first == null) first = last = new Node<Item>(item, null);
         else last = last.next = new Node<Item>(item, null);

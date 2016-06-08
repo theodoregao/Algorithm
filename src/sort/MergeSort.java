@@ -26,6 +26,17 @@ public class MergeSort {
         }
     }
     
+    // less compare but lost stable
+//    private static void merge(Comparable[] comparables, int lo, int mid, int hi) {
+//        int i = lo, j = hi;
+//        for (int k = lo; k <= mid; k++) aux[k] = comparables[k];
+//        for (int k = mid + 1; k <= hi; k++) aux[k] = comparables[hi - k + mid + 1];
+//        for (int k = lo; k <= hi; k++) {
+//            if (SortUtil.less(aux[j], aux[i])) comparables[k] = aux[j--];
+//            else comparables[k] = aux[i++];
+//        }
+//    }
+    
     private static void sort(Comparable[] comparables, Comparable[] aux, int lo, int hi) {
         if (hi <= lo) return;
         

@@ -25,6 +25,12 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     }
 
     @Override
+    public Item peek() {
+        if (size == 0) throw new NoSuchElementException();
+        return items[first];
+    }
+
+    @Override
     public void enqueue(Item item) {
         if (first + size == items.length) resize();
         items[first + size++] = item;
