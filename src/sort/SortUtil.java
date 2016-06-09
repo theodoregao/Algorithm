@@ -31,11 +31,12 @@ class SortUtil {
     public static void main(String[] args) {
         int size = 10000000;
         int[] num = StdRandom.sample(0, size * 10, size);
+//        for (int i = 0; i < size; i++) num[i] = i % 2;
 //        Arrays.sort(num);
         Stopwatch stopwatch = new Stopwatch();
         Integer[] nums = new Integer[size];
         for (int i = 0; i < nums.length; i++) nums[i] = num[i];
-        MergeSort.sort(nums);
+        QuickSort.threeWaySort(nums);
         System.out.println(stopwatch.elapsedTime());
         System.out.println("sorted " + SortUtil.isSorted(nums));
     }
