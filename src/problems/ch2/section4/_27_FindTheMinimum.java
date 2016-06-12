@@ -1,4 +1,4 @@
-package problems.ch2.section3;
+package problems.ch2.section4;
 
 import collections.StdRandom;
 
