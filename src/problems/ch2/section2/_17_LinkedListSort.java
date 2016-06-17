@@ -22,14 +22,14 @@ public class _17_LinkedListSort<Item extends Comparable> {
 //    }
     
     public Node<Item> sort(Node<Item> head) {
-        if (head == null) return null;
-        if (head.next == null) return head;
+        if (head == null || head.next == null) return head;
         Node<Item> hp, hq, hqPre;
         int count = 0;
         hp = head;
         hq = head;
         hqPre = null;
         
+        head = head.next;
         while (head != null) {
             if (count++ % 2 == 0) { hqPre = hq; hq = hq.next; }
             head = head.next;
