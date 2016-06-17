@@ -5,19 +5,39 @@ import edu.princeton.cs.algs4.Stopwatch;
 
 public class _17_LinkedListSort<Item extends Comparable> {
     
+//    public Node<Item> sort(Node<Item> head) {
+//        if (head == null) return null;
+//        if (head.next == null) return head;
+//        Node<Item> hp, hq, p, q;
+//        hp = p = new Node<Item>();
+//        hq = q = new Node<Item>();
+//        for (int i = 0; head != null; head = head.next, i++) {
+//            if (i % 2 == 0) { p.next = head; p = head; }
+//            else { q.next = head; q = head; }
+//        }
+//        p.next = q.next = null;
+//        hp = sort(hp.next);
+//        hq = sort(hq.next);
+//        return merge(hp, hq);
+//    }
+    
     public Node<Item> sort(Node<Item> head) {
         if (head == null) return null;
         if (head.next == null) return head;
-        Node<Item> hp, hq, p, q;
-        hp = p = new Node<Item>();
-        hq = q = new Node<Item>();
-        for (int i = 0; head != null; head = head.next, i++) {
-            if (i % 2 == 0) { p.next = head; p = head; }
-            else { q.next = head; q = head; }
+        Node<Item> hp, hq, hqPre;
+        int count = 0;
+        hp = head;
+        hq = head;
+        hqPre = null;
+        
+        while (head != null) {
+            if (count++ % 2 == 0) { hqPre = hq; hq = hq.next; }
+            head = head.next;
         }
-        p.next = q.next = null;
-        hp = sort(hp.next);
-        hq = sort(hq.next);
+        
+        hqPre.next = null;
+        hp = sort(hp);
+        hq = sort(hq);
         return merge(hp, hq);
     }
     
@@ -57,7 +77,7 @@ public class _17_LinkedListSort<Item extends Comparable> {
     }
 
     public static void main(String[] args) {
-        int size = 1000000;
+        int size = 999999;
         int[] num = StdRandom.sample(0, size * 10, size);
         Stopwatch stopwatch = new Stopwatch();
         Node<Integer> nums = new Node<Integer>();
