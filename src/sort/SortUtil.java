@@ -1,5 +1,7 @@
 package sort;
 
+import java.util.Comparator;
+
 import collections.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
 
@@ -37,6 +39,13 @@ class SortUtil {
         Integer[] nums = new Integer[size];
         for (int i = 0; i < nums.length; i++) nums[i] = num[i];
         QuickSort.threeWaySort(nums);
+//        new HeapSort<Integer>().sort(nums, new Comparator<Integer>() {
+//            
+//            @Override
+//            public int compare(Integer o1, Integer o2) {
+//                return o1 - o2;
+//            }
+//        });
         System.out.println(stopwatch.elapsedTime());
         System.out.println("sorted " + SortUtil.isSorted(nums));
     }

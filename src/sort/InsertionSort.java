@@ -11,7 +11,6 @@ public class InsertionSort {
     }
     
     static void sort(Comparable[] comparables, int lo, int hi) {
-        int n = hi - lo + 1;
         for (int i = lo; i <= hi; i++) {
             for (int j = i; j > lo && SortUtil.less(comparables[j], comparables[j - 1]); j--)
                 SortUtil.swap(comparables, j, j - 1);
@@ -19,7 +18,6 @@ public class InsertionSort {
     }
     
     static void sort(int[] nums, int lo, int hi) {
-        int n = hi - lo + 1;
         for (int i = lo; i <= hi; i++) {
             for (int j = i; j > lo && nums[j] < nums[j - 1]; j--)
                 SortUtil.swap(nums, j, j - 1);
@@ -31,8 +29,6 @@ public class InsertionSort {
     }
     
     static void optimizedSort(Comparable[] comparables, int lo, int hi) {
-        int n = comparables.length;
-        
         for (int i = hi; i > lo; i--)
             if (SortUtil.less(comparables[i], comparables[i - 1]))
                 SortUtil.swap(comparables, i, i - 1);
