@@ -1,6 +1,6 @@
 package collections;
 
-public class BinarySearchST<Key extends Comparable, Value> implements SymbolTable<Key, Value> {
+public class BinarySearchST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
     
     private static final int DEFAULT_SIZE = 16;
     
@@ -50,20 +50,6 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
         int i = rank(key);
         if (i < size && keys[i].compareTo(key) == 0) return values[i];
         else return null;
-    }
-
-    @Override
-    public void delete(Key key) {
-        int i = rank(key);
-        if (i < size && keys[i].compareTo(key) == 0) {
-            for (++i; i < size; i++) {
-                keys[i - 1] = keys[i];
-                values[i - 1] = values[i];
-            }
-            size--;
-            keys[size] = null;
-            values[size] = null;
-        }
     }
 
     @Override
@@ -141,6 +127,20 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
     @Override
     public void deleteMax() {
         delete(max());
+    }
+
+    @Override
+    public void delete(Key key) {
+        int i = rank(key);
+        if (i < size && keys[i].compareTo(key) == 0) {
+            for (++i; i < size; i++) {
+                keys[i - 1] = keys[i];
+                values[i - 1] = values[i];
+            }
+            size--;
+            keys[size] = null;
+            values[size] = null;
+        }
     }
 
     @Override
