@@ -330,5 +330,26 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         System.out.println("" + st.rank("Rubz"));
         for (int i = 0; i < st.size(); i++)
             System.out.println(st.select(i));
+        
+        // test floor, ceiling
+        System.out.println("" + st.floor("Gn"));
+        System.out.println("" + st.floor("Go"));
+        System.out.println("" + st.floor("Gp"));
+        System.out.println("" + st.floor("Jav"));
+        System.out.println("" + st.floor("Java"));
+        System.out.println("" + st.floor("JavaA"));
+        System.out.println("" + st.floor("Rubx"));
+        System.out.println("" + st.floor("Ruby"));
+        System.out.println("" + st.floor("Rubz"));
+
+        System.out.println("" + st.ceiling("Gn"));
+        System.out.println("" + st.ceiling("Go"));
+        System.out.println("" + st.ceiling("Gp"));
+        System.out.println("" + st.ceiling("Jav"));
+        System.out.println("" + st.ceiling("Java"));
+        System.out.println("" + st.ceiling("JavaA"));
+        System.out.println("" + st.ceiling("Rubx"));
+        System.out.println("" + st.ceiling("Ruby"));
+        System.out.println("" + st.ceiling("Rubz"));
     }
 }
