@@ -16,6 +16,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         else if (cmp > 0) node.right = put(node.right, key, value);
         else node.value = value;
         node.size = size(node.left) + size(node.right) + 1;
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
         return node;
     }
 
@@ -50,6 +51,15 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     private int size(Node node) {
         if (node == null) return 0;
         else return node.size;
+    }
+    
+    public int height() {
+        return height(root);
+    }
+    
+    private int height(Node node) {
+        if (node == null) return 0;
+        else return node.height;
     }
 
     @Override
@@ -141,6 +151,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (node.left == null) return node.right;
         node.left = deleteMin(node.left);
         node.size = size(node.left) + size(node.right) + 1;
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
         return node;
     }
 
@@ -153,6 +164,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (node.right == null) return node.left;
         node.right = deleteMax(node.right);
         node.size = size(node.left) + size(node.right) + 1;
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
         return node;
     }
 
@@ -175,6 +187,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             node.left = t.left;
         }
         node.size = size(node.left) + size(node.right) + 1;
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
         return node;
     }
 
@@ -211,11 +224,25 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         private Value value;
         private Node left, right;
         private int size;
+        private int height; 
         
         public Node(Key key, Value value, int size) {
             this.key = key;
             this.value = value;
             this.size = size;
+            height = 1;
+        }
+        
+        @Override
+        public String toString() {
+            StringBuilder stringBuilder = new StringBuilder(Node.class.getSimpleName());
+            stringBuilder.append("{")
+            .append("key=").append(key)
+            .append(", value=").append(value)
+            .append(", size=").append(size)
+            .append(", height=").append(height)
+            .append("}");
+            return stringBuilder.toString();
         }
     }
     
@@ -271,85 +298,139 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 //        System.out.println(st.ceiling(101));
 //    }
     
+//    public static void main(String[] args) {
+//        BST<String, Integer> bst = new BST<>();
+//        bst.put("C++", 0);
+//        bst.put("C++", 1);
+//        bst.put("Java", 0);
+//        bst.put("Python", 0);
+//        bst.put("C#", 0);
+//        bst.put("JavaScript", 0);
+//        bst.put("Ruby", 0);
+//        bst.put("Swift", 0);
+//        bst.put("Go", 0);
+//        
+//        bst.put("Python", 1);
+//        bst.put("Java", 1);
+//        bst.put("C#", 1);
+//        
+//        for (String key: bst.keys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+//        
+//        // test size
+//        System.out.println("size: " + bst.size());
+//        System.out.println("height: " + bst.height());
+//        
+//        System.out.println(bst.min());
+//        System.out.println(bst.max());
+//        
+//        // test delete
+//        bst.delete("C++");
+//        
+//        // test size
+//        System.out.println("size: " + bst.size());
+//        System.out.println("height: " + bst.height());
+//        
+//        bst.delete("Python");
+//        
+//        // test size
+//        System.out.println("size: " + bst.size());
+//        System.out.println("height: " + bst.height());
+//
+//        bst.delete("C#");
+//        bst.delete("Swift");
+//        
+//        for (String key: bst.keys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+//
+//        // test min, max
+//        for (String key: bst.keys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+//
+//        System.out.println("min: " + bst.min());
+//        System.out.println("max: " + bst.max());
+//        
+//        // test size
+//        System.out.println("size: " + bst.size());
+//        System.out.println("height: " + bst.height());
+//        
+//        // test rank, select
+//        System.out.println("" + bst.rank("Gn"));
+//        System.out.println("" + bst.rank("Go"));
+//        System.out.println("" + bst.rank("Gp"));
+//        System.out.println("" + bst.rank("Jav"));
+//        System.out.println("" + bst.rank("Java"));
+//        System.out.println("" + bst.rank("JavaA"));
+//        System.out.println("" + bst.rank("Rubx"));
+//        System.out.println("" + bst.rank("Ruby"));
+//        System.out.println("" + bst.rank("Rubz"));
+//        for (int i = 0; i < bst.size(); i++)
+//            System.out.println(bst.select(i));
+//        
+//        // test floor, ceiling
+//        System.out.println("" + bst.floor("Gn"));
+//        System.out.println("" + bst.floor("Go"));
+//        System.out.println("" + bst.floor("Gp"));
+//        System.out.println("" + bst.floor("Jav"));
+//        System.out.println("" + bst.floor("Java"));
+//        System.out.println("" + bst.floor("JavaA"));
+//        System.out.println("" + bst.floor("Rubx"));
+//        System.out.println("" + bst.floor("Ruby"));
+//        System.out.println("" + bst.floor("Rubz"));
+//
+//        System.out.println("" + bst.ceiling("Gn"));
+//        System.out.println("" + bst.ceiling("Go"));
+//        System.out.println("" + bst.ceiling("Gp"));
+//        System.out.println("" + bst.ceiling("Jav"));
+//        System.out.println("" + bst.ceiling("Java"));
+//        System.out.println("" + bst.ceiling("JavaA"));
+//        System.out.println("" + bst.ceiling("Rubx"));
+//        System.out.println("" + bst.ceiling("Ruby"));
+//        System.out.println("" + bst.ceiling("Rubz"));
+//    }
+    
+    public boolean isBinaryTree() {
+        return isBinaryTree(root);
+    }
+    
+    private boolean isBinaryTree(Node node) {
+        return calculateSize(node) == node.size && calculateHeight(node) == node.height;
+    }
+    
+    private int calculateSize(Node node) {
+        if (node == null) return 0;
+        else return calculateSize(node.left) + calculateSize(node.right) + 1;
+    }
+    
+    private int calculateHeight(Node node) {
+        if (node == null) return 0;
+        else return Math.max(calculateHeight(node.left), calculateHeight(node.right)) + 1;
+    }
+    
     public static void main(String[] args) {
-        SymbolTable<String, Integer> st = new BST<>();
-        st.put("C++", 0);
-        st.put("C++", 1);
-        st.put("Java", 0);
-        st.put("Python", 0);
-        st.put("C#", 0);
-        st.put("JavaScript", 0);
-        st.put("Ruby", 0);
-        st.put("Swift", 0);
-        st.put("Go", 0);
+        BST<String, Integer> bst = new BST<>();
+        bst.put("C++", 0);
+        bst.put("C++", 1);
+        bst.put("Java", 0);
+        bst.put("Python", 0);
+        bst.put("C#", 0);
+        bst.put("JavaScript", 0);
+        bst.put("Ruby", 0);
+        bst.put("Swift", 0);
+        bst.put("Go", 0);
+      
+        bst.put("Python", 1);
+        bst.put("Java", 1);
+        bst.put("C#", 1);
         
-        st.put("Python", 1);
-        st.put("Java", 1);
-        st.put("C#", 1);
-        
-        for (String key: st.keys()) {
-            System.out.println(key + ": " + st.get(key));
-        }
-        
-        System.out.println(st.min());
-        System.out.println(st.max());
-        
-        // test delete
-        st.delete("C++");
-        st.delete("Python");
-        
-        for (String key: st.keys()) {
-            System.out.println(key + ": " + st.get(key));
-        }
-
-        System.out.println(st.min());
-        System.out.println(st.max());
-        
-        st.delete("C#");
-        st.delete("Swift");
-
-        // test min, max
-        for (String key: st.keys()) {
-            System.out.println(key + ": " + st.get(key));
-        }
-        System.out.println(st.min());
-        System.out.println(st.max());
-        
-        // test size
-        System.out.println(st.size());
-        
-        // test rank, select
-        System.out.println("" + st.rank("Gn"));
-        System.out.println("" + st.rank("Go"));
-        System.out.println("" + st.rank("Gp"));
-        System.out.println("" + st.rank("Jav"));
-        System.out.println("" + st.rank("Java"));
-        System.out.println("" + st.rank("JavaA"));
-        System.out.println("" + st.rank("Rubx"));
-        System.out.println("" + st.rank("Ruby"));
-        System.out.println("" + st.rank("Rubz"));
-        for (int i = 0; i < st.size(); i++)
-            System.out.println(st.select(i));
-        
-        // test floor, ceiling
-        System.out.println("" + st.floor("Gn"));
-        System.out.println("" + st.floor("Go"));
-        System.out.println("" + st.floor("Gp"));
-        System.out.println("" + st.floor("Jav"));
-        System.out.println("" + st.floor("Java"));
-        System.out.println("" + st.floor("JavaA"));
-        System.out.println("" + st.floor("Rubx"));
-        System.out.println("" + st.floor("Ruby"));
-        System.out.println("" + st.floor("Rubz"));
-
-        System.out.println("" + st.ceiling("Gn"));
-        System.out.println("" + st.ceiling("Go"));
-        System.out.println("" + st.ceiling("Gp"));
-        System.out.println("" + st.ceiling("Jav"));
-        System.out.println("" + st.ceiling("Java"));
-        System.out.println("" + st.ceiling("JavaA"));
-        System.out.println("" + st.ceiling("Rubx"));
-        System.out.println("" + st.ceiling("Ruby"));
-        System.out.println("" + st.ceiling("Rubz"));
+        System.out.println(bst.root);
+        System.out.println(bst.isBinaryTree(bst.root));
+        System.out.println(bst.root.left);
+        System.out.println(bst.isBinaryTree(bst.root.left));
+        System.out.println(bst.root.right);
+        System.out.println(bst.isBinaryTree(bst.root.right));
     }
 }
