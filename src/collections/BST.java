@@ -15,8 +15,8 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (cmp < 0) node.left = put(node.left, key, value);
         else if (cmp > 0) node.right = put(node.right, key, value);
         else node.value = value;
-        node.size = size(node.left) + size(node.right) + 1;
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
+        node.resolveSize();
+        node.resolveHeight();
         return node;
     }
 
@@ -222,15 +222,25 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     private class Node {
         private Key key;
         private Value value;
-        private Node left, right;
+        private Node left, right, pred, succ;
         private int size;
-        private int height; 
+        private int height;
         
         public Node(Key key, Value value, int size) {
             this.key = key;
             this.value = value;
             this.size = size;
             height = 1;
+            pred = null;
+            succ = null;
+        }
+        
+        public void resolveSize() {
+            size = ((left == null) ? 0 : left.size) + ((right == null) ? 0 : right.size) + 1;
+        }
+        
+        public void resolveHeight() {
+            height = Math.max(((left == null) ? 0 : left.height), ((right == null) ? 0 : right.height)) + 1;
         }
         
         @Override
@@ -267,6 +277,10 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 //        System.out.println(max + ": " + st.get(max));
 //    }
     
+    private void print() {
+        for (Key key: keys()) System.out.println(key + ": " + get(key));
+    }
+    
     private static void testFloorCeiling() {
         SymbolTable<Integer, Integer> st = new BST<Integer, Integer>();
         st.put(1, 0);
@@ -297,6 +311,51 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         System.out.println(st.ceiling(101));
     }
     
+    private static void testSizeHeight() {
+        BST<String, Integer> bst = new BST<>();
+        bst.put("C++", 0);
+        bst.put("C++", 1);
+        bst.put("Java", 0);
+        bst.put("Python", 0);
+        bst.put("C#", 0);
+        bst.put("JavaScript", 0);
+        bst.put("Ruby", 0);
+        bst.put("Swift", 0);
+        bst.put("Go", 0);
+        
+        bst.put("Python", 1);
+        bst.put("Java", 1);
+        bst.put("C#", 1);
+        
+        bst.print();
+        System.out.println();
+        System.out.println("size: " + bst.size());
+        System.out.println("height: " + bst.height());
+        System.out.println("==================================================");
+        System.out.println();
+        
+        bst.delete("C++");
+        bst.delete("Ruby");
+
+        bst.print();
+        System.out.println();
+        System.out.println("size: " + bst.size());
+        System.out.println("height: " + bst.height());
+        System.out.println("==================================================");
+        System.out.println();
+        
+        bst.delete("JavaScript");
+        bst.put("SQL", 1024);
+        bst.put("Android", 0);
+
+        bst.print();
+        System.out.println();
+        System.out.println("size: " + bst.size());
+        System.out.println("height: " + bst.height());
+        System.out.println("==================================================");
+        System.out.println();
+    }
+    
     private static void testBasic() {
         BST<String, Integer> bst = new BST<>();
         bst.put("C++", 0);
@@ -317,25 +376,9 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             System.out.println(key + ": " + bst.get(key));
         }
         
-        // test size
-        System.out.println("size: " + bst.size());
-        System.out.println("height: " + bst.height());
-        
-        System.out.println(bst.min());
-        System.out.println(bst.max());
-        
         // test delete
         bst.delete("C++");
-        
-        // test size
-        System.out.println("size: " + bst.size());
-        System.out.println("height: " + bst.height());
-        
         bst.delete("Python");
-        
-        // test size
-        System.out.println("size: " + bst.size());
-        System.out.println("height: " + bst.height());
 
         bst.delete("C#");
         bst.delete("Swift");
@@ -351,10 +394,6 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
         System.out.println("min: " + bst.min());
         System.out.println("max: " + bst.max());
-        
-        // test size
-        System.out.println("size: " + bst.size());
-        System.out.println("height: " + bst.height());
         
         // test rank, select
         System.out.println("" + bst.rank("Gn"));
@@ -501,7 +540,8 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     public static void main(String[] args) {
 //        testFloorCeiling();
 //        testBasic();
+        testSizeHeight();
 //        testBst();
-        testSelectRank();
+//        testSelectRank();
     }
 }
