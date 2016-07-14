@@ -15,8 +15,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (cmp < 0) node.left = put(node.left, key, value);
         else if (cmp > 0) node.right = put(node.right, key, value);
         else node.value = value;
-        node.resolveSize();
-        node.resolveHeight();
+        node.reset();
         return node;
     }
 
@@ -150,8 +149,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     private Node deleteMin(Node node) {
         if (node.left == null) return node.right;
         node.left = deleteMin(node.left);
-        node.size = size(node.left) + size(node.right) + 1;
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
+        node.reset();
         return node;
     }
 
@@ -163,8 +161,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     private Node deleteMax(Node node) {
         if (node.right == null) return node.left;
         node.right = deleteMax(node.right);
-        node.size = size(node.left) + size(node.right) + 1;
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
+        node.reset();
         return node;
     }
 
@@ -186,8 +183,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             node.right = deleteMin(t.right);
             node.left = t.left;
         }
-        node.size = size(node.left) + size(node.right) + 1;
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
+        node.reset();
         return node;
     }
 
@@ -219,10 +215,23 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (cmphi > 0) keys(node.right, queue, lo, hi);
     }
     
+    private Iterable<Node> nodes() {
+        Queue<Node> queue = new LinkedQueue<>();
+        nodes(root, queue);
+        return queue;
+    }
+    
+    private void nodes(Node node, Queue<Node> queue) {
+        if (node == null) return;
+        nodes(node.left, queue);
+        queue.enqueue(node);
+        nodes(node.right, queue);
+    }
+
     private class Node {
         private Key key;
         private Value value;
-        private Node left, right, pred, succ;
+        private Node left, right;
         private int size;
         private int height;
         
@@ -231,16 +240,45 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             this.value = value;
             this.size = size;
             height = 1;
-            pred = null;
-            succ = null;
         }
         
-        public void resolveSize() {
-            size = ((left == null) ? 0 : left.size) + ((right == null) ? 0 : right.size) + 1;
+        public int resolveSize() {
+            return resolveSize(this);
         }
         
-        public void resolveHeight() {
-            height = Math.max(((left == null) ? 0 : left.height), ((right == null) ? 0 : right.height)) + 1;
+        private int resolveSize(Node node) {
+            if (node == null) return 0;
+            return resolveSize(node.left) + resolveSize(node.right) + 1;
+        }
+        
+        public int resolveHeight() {
+            return resolveHeight(this);
+        }
+        
+        private int resolveHeight(Node node) {
+            if (node == null) return 0;
+            return Math.max(resolveHeight(node.left), resolveHeight(node.right)) + 1;
+        }
+        
+        public void reset() {
+            resetSize();
+            resetHeight();
+        }
+        
+        public int resetSize() {
+            return setSize(((left == null) ? 0 : left.size) + ((right == null) ? 0 : right.size) + 1);
+        }
+        
+        public int setSize(int size) {
+            return this.size = size;
+        }
+        
+        public int resetHeight() {
+            return setHeight(Math.max(((left == null) ? 0 : left.height), ((right == null) ? 0 : right.height)) + 1);
+        }
+        
+        public int setHeight(int height) {
+            return this.height = height;
         }
         
         @Override
@@ -251,34 +289,29 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             .append(", value=").append(value)
             .append(", size=").append(size)
             .append(", height=").append(height)
+//            .append(", left=").append(key(left))
+//            .append(", right=").append(key(right))
+//            .append(", pred=").append(key(pred))
+//            .append(", succ=").append(key(succ))
             .append("}");
             return stringBuilder.toString();
         }
+        
+//        private String key(Node node) {
+//            if (node == null) return "null";
+//            else return node.key.toString();
+//        }
     }
     
-    // test word count
-//    public static void main(String[] args) {
-//        int minLength = 8;
-//        SymbolTable<String, Integer> st = new BST<String, Integer>();
-//        In in = new In("data/tale.txt");
-//  
-//        while (!in.isEmpty()) {
-//            String word = in.readString();
-//            if (word.length() < minLength) continue;
-//            if (!st.contains(word)) st.put(word, 1);
-//            else st.put(word, st.get(word) + 1);
-//        }
-//  
-//        String max = "";
-//        st.put(max, 0);
-//        for (String word: st.keys())
-//            if (st.get(word) > st.get(max))
-//                max = word;
-//        System.out.println(max + ": " + st.get(max));
-//    }
-    
     private void print() {
-        for (Key key: keys()) System.out.println(key + ": " + get(key));
+        print(root);
+    }
+    
+    private void print(Node node) {
+        if (node == null) return;
+        print(node.left);
+        System.out.println(node);
+        print(node.right);
     }
     
     private static void testFloorCeiling() {
@@ -430,65 +463,38 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         System.out.println("" + bst.ceiling("Rubz"));
     }
     
+    private boolean isBinaryTree() {
+        return isBinaryTree(root);
+    }
+    
     private boolean isBinaryTree(Node node) {
-        return calculateSize(node) == node.size && calculateHeight(node) == node.height;
+        if (node == null) return true;
+        return isBinaryTree(node.left) && isBinaryTree(node.right) &&
+                (node.left == null ? 0 : node.left.resolveSize()) + (node.right == null ? 0 : node.right.resolveSize()) + 1 == node.size;
     }
     
-    private int calculateSize(Node node) {
-        if (node == null) return 0;
-        else return calculateSize(node.left) + calculateSize(node.right) + 1;
+    private boolean isOrdered() {
+        Node preNode = null;
+        for (Node node: nodes()) {
+            if (preNode != null) if (preNode.key.compareTo(node.key) > 0) return false;
+            preNode = node;
+        }
+        return true;
     }
     
-    private int calculateHeight(Node node) {
-        if (node == null) return 0;
-        else return Math.max(calculateHeight(node.left), calculateHeight(node.right)) + 1;
-    }
-    
-    private Key preKey;
-    
-    private boolean isOrdered(Node node, Key min, Key max) {
-        preKey = null;
-        return isOrderedInternal(node, min, max);
-    }
-    
-    private boolean isOrderedInternal(Node node, Key min, Key max) {
-        return node == null ||
-                (isOrderedInternal(node.left, min, max)
-                        && checkNodeOrdered(node, min, max)
-                        && isOrderedInternal(node.right, min, max));
-    }
-    
-    private boolean checkNodeOrdered(Node node, Key min, Key max) {
-        boolean isOrdered = (preKey == null || preKey.compareTo(node.key) <= 0)
-                && min.compareTo(node.key) <= 0 && node.key.compareTo(max) <= 0;
-        preKey = node.key;
-//        System.out.println("update preKey to: " + preKey);
-        return isOrdered;
-    }
-    
-    private boolean hasNoDuplicates(Node node) {
-        preKey = null;
-        return hasNoDuplicatesInternal(node);
-    }
-    
-    private boolean hasNoDuplicatesInternal(Node node) {
-        return node == null ||
-                (hasNoDuplicatesInternal(node.left)
-                        && checkNoDuplicates(node)
-                        && hasNoDuplicatesInternal(node.right));
-    }
-    
-    private boolean checkNoDuplicates(Node node) {
-        boolean isNoDuplicates = preKey == null || preKey.compareTo(node.key) != 0;
-        preKey = node.key;
-//        System.out.println("update preKey to: " + preKey);
-        return isNoDuplicates;
+    private boolean hasNoDuplicates() {
+        Node preNode = null;
+        for (Node node: nodes()) {
+            if (preNode != null) if (preNode.key.compareTo(node.key) == 0) return false;
+            preNode = node;
+        }
+        return true;
     }
     
     private boolean isBST() {
-        return isBinaryTree(root)
-                && isOrdered(root, min(), max())
-                && hasNoDuplicates(root);
+        return isBinaryTree()
+                && isOrdered()
+                && hasNoDuplicates();
     }
     
     private static void testBst() {
@@ -507,6 +513,22 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         bst.put("Java", 1);
         bst.put("C#", 1);
         
+        bst.print();
+
+//        bst.root.right.height = 1;
+//        bst.root.right.size = 1;
+        
+//        bst.root.left.key = "Java";
+//        bst.root.right.key = "C#";
+        
+//        bst.root.right.key = "C++";
+        
+        System.out.println(bst.isBST());
+    }
+    
+    private static void stressTestBst() {
+        BST<Integer, Integer> bst = new BST<>();
+        for (int i = 0; i < 1000; i++) bst.put(i, i);
         System.out.println(bst.isBST());
     }
     
@@ -526,6 +548,8 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         bst.put("Java", 1);
         bst.put("C#", 1);
         
+        bst.print();
+        
         int i = 0;
         for (String key: bst.keys()) {
             System.out.println(key);
@@ -540,8 +564,30 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     public static void main(String[] args) {
 //        testFloorCeiling();
 //        testBasic();
-        testSizeHeight();
-//        testBst();
+//        testSizeHeight();
 //        testSelectRank();
+//        testBst();
+//        stressTestBst();
     }
+    
+    // test word count
+//    public static void main(String[] args) {
+//        int minLength = 8;
+//        SymbolTable<String, Integer> st = new BST<String, Integer>();
+//        In in = new In("data/tale.txt");
+//  
+//        while (!in.isEmpty()) {
+//            String word = in.readString();
+//            if (word.length() < minLength) continue;
+//            if (!st.contains(word)) st.put(word, 1);
+//            else st.put(word, st.get(word) + 1);
+//        }
+//  
+//        String max = "";
+//        st.put(max, 0);
+//        for (String word: st.keys())
+//            if (st.get(word) > st.get(max))
+//                max = word;
+//        System.out.println(max + ": " + st.get(max));
+//    }
 }
