@@ -215,6 +215,25 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         if (cmphi > 0) keys(node.right, queue, lo, hi);
     }
     
+    private Iterable<Key> loopKeys() {
+        Queue<Key> queue = new LinkedQueue<Key>();
+        Stack<Node> nodes = new LinkedStack<>();
+        Node currentNode = root;
+        do {
+            if (currentNode != null) {
+                nodes.push(currentNode);
+                currentNode = currentNode.left;
+            }
+            else if (!nodes.isEmpty()) {
+                currentNode = nodes.pop();
+                queue.enqueue(currentNode.key);
+                currentNode = currentNode.right;
+            }
+        } while (currentNode != null || !nodes.isEmpty());
+        
+        return queue;
+    }
+    
     private Iterable<Node> nodes() {
         Queue<Node> queue = new LinkedQueue<>();
         nodes(root, queue);
@@ -226,6 +245,21 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         nodes(node.left, queue);
         queue.enqueue(node);
         nodes(node.right, queue);
+    }
+    
+    public void clear() {
+        clear(root);
+        root = null;
+    }
+    
+    private void clear(Node node) {
+        if (node == null) return;
+        clear(node.left);
+        clear(node.right);
+        node.key = null;
+        node.value = null;
+        node.left = null;
+        node.right = null;
     }
 
     private class Node {
@@ -415,10 +449,6 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
         bst.delete("C#");
         bst.delete("Swift");
-        
-        for (String key: bst.keys()) {
-            System.out.println(key + ": " + bst.get(key));
-        }
 
         // test min, max
         for (String key: bst.keys()) {
@@ -461,6 +491,39 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         System.out.println("" + bst.ceiling("Rubx"));
         System.out.println("" + bst.ceiling("Ruby"));
         System.out.println("" + bst.ceiling("Rubz"));
+    }
+    
+    private static void testIterator() {
+        BST<Integer, Integer> bst = new BST<>();
+        for (int i = 0; i < 1000; i++) bst.put(i, i);
+
+        for (Integer key: bst.loopKeys()) {
+            System.out.println(key + ": " + bst.get(key));
+        }
+    }
+    
+    private static void testClear() {
+        BST<String, Integer> bst = new BST<>();
+        bst.put("C++", 0);
+        bst.put("C++", 1);
+        bst.put("Java", 0);
+        bst.put("Python", 0);
+        bst.put("C#", 0);
+        bst.put("JavaScript", 0);
+        bst.put("Ruby", 0);
+        bst.put("Swift", 0);
+        bst.put("Go", 0);
+        
+        bst.put("Python", 1);
+        bst.put("Java", 1);
+        bst.put("C#", 1);
+        
+        bst.clear();
+        
+        for (String key: bst.loopKeys()) {
+            System.out.println(key);
+            System.out.println(key + ": " + bst.get(key));
+        }
     }
     
     private boolean isBinaryTree() {
@@ -568,6 +631,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 //        testSelectRank();
 //        testBst();
 //        stressTestBst();
+        testIterator();
     }
     
     // test word count
