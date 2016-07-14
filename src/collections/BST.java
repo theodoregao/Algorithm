@@ -7,6 +7,18 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     @Override
     public void put(Key key, Value value) {
         root = put(root, key, value);
+        int rank = rank(key);
+        Node node = select(root, rank);
+        if (rank > 0) {
+            Node pred = select(root, rank - 1);
+            pred.succ = node;
+            node.pred = pred;
+        }
+        if (rank < size() - 1) {
+            Node succ = select(root, rank + 1);
+            succ.pred = node;
+            node.succ = succ;
+        }
     }
     
     private Node put(Node node, Key key, Value value) {
@@ -67,8 +79,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private Node min(Node node) {
-        if (node.left == null) return node;
-        return min(node.left);
+        return (node == null || node.left == null) ? node : min(node.left);
     }
 
     @Override
@@ -77,8 +88,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private Node max(Node node) {
-        if (node.right == null) return node;
-        return max(node.right);
+        return (node == null || node.right == null) ? node : max(node.right);
     }
 
     @Override
@@ -143,7 +153,9 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
     @Override
     public void deleteMin() {
+        Node min = min(root);
         root = deleteMin(root);
+        if (min != null && min.succ != null) min.succ.pred = null;
     }
     
     private Node deleteMin(Node node) {
@@ -155,7 +167,9 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
     @Override
     public void deleteMax() {
+        Node max = max(root);
         root = deleteMax(root);
+        if (max != null && max.pred != null) max.pred.succ = null;
     }
     
     private Node deleteMax(Node node) {
@@ -167,7 +181,12 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
     @Override
     public void delete(Key key) {
+        Node node = select(root, rank(key));
         root = delete(root, key);
+        if (node != null) {
+            if (node.pred != null) node.pred.succ = node.succ;
+            if (node.succ != null) node.succ.pred = node.pred;
+        }
     }
     
     private Node delete(Node node, Key key) {
@@ -193,30 +212,20 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         keys(root, queue, lo, hi);
         return queue.size();
     }
-
+    
     @Override
     public Iterable<Key> keys() {
-        return keys(min(), max());
-    }
-
-    @Override
-    public Iterable<Key> keys(Key lo, Key hi) {
-        Queue<Key> queue = new LinkedQueue<Key>();
-        keys(root, queue, lo, hi);
+        Queue<Key> queue = new LinkedQueue<>();
+        Node node = min(root);
+        while (node != null) {
+            queue.enqueue(node.key);
+            node = node.succ;
+        }
         return queue;
     }
     
-    private void keys(Node node, Queue<Key> queue, Key lo, Key hi) {
-        if (node == null) return;
-        int cmplo = lo.compareTo(node.key);
-        int cmphi = hi.compareTo(node.key);
-        if (cmplo < 0) keys(node.left, queue, lo, hi);
-        if (cmplo <= 0 && cmphi >= 0) queue.enqueue(node.key);
-        if (cmphi > 0) keys(node.right, queue, lo, hi);
-    }
-    
-    private Iterable<Key> loopKeys() {
-        Queue<Key> queue = new LinkedQueue<Key>();
+    public Iterable<Key> loopKeys() {
+        Queue<Key> queue = new LinkedQueue<>();
         Stack<Node> nodes = new LinkedStack<>();
         Node currentNode = root;
         do {
@@ -232,6 +241,40 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         } while (currentNode != null || !nodes.isEmpty());
         
         return queue;
+    }
+    
+    public Iterable<Key> levelKeys() {
+        Queue<Key> queue = new LinkedQueue<>();
+        Queue<Node> nodes = new LinkedQueue<>();
+        Node node;
+        if (root != null) nodes.enqueue(root);
+        while (!nodes.isEmpty()) {
+            node = nodes.dequeue();
+            if (node.left != null) nodes.enqueue(node.left);
+            if (node.right != null) nodes.enqueue(node.right);
+            queue.enqueue(node.key);
+        }
+        return queue;
+    }
+
+//    private Iterable<Key> recursiveKeys() {
+//        return keys(min(), max());
+//    }
+
+    @Override
+    public Iterable<Key> keys(Key lo, Key hi) {
+        Queue<Key> queue = new LinkedQueue<Key>();
+        keys(root, queue, lo, hi);
+        return queue;
+    }
+    
+    private void keys(Node node, Queue<Key> queue, Key lo, Key hi) {
+        if (node == null) return;
+        int cmplo = lo.compareTo(node.key);
+        int cmphi = hi.compareTo(node.key);
+        if (cmplo < 0) keys(node.left, queue, lo, hi);
+        if (cmplo <= 0 && cmphi >= 0) queue.enqueue(node.key);
+        if (cmphi > 0) keys(node.right, queue, lo, hi);
     }
     
     private Iterable<Node> nodes() {
@@ -265,7 +308,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     private class Node {
         private Key key;
         private Value value;
-        private Node left, right;
+        private Node left, right, pred, succ;
         private int size;
         private int height;
         
@@ -274,6 +317,8 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             this.value = value;
             this.size = size;
             height = 1;
+            pred = null;
+            succ = null;
         }
         
         public int resolveSize() {
@@ -494,10 +539,54 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testIterator() {
-        BST<Integer, Integer> bst = new BST<>();
-        for (int i = 0; i < 1000; i++) bst.put(i, i);
+//        BST<Integer, Integer> bst = new BST<>();
+//        for (int i = 0; i < 1000; i++) {
+//            bst.put(i, i);
+//            bst.put(-i, -i);
+//        }
+        
+//        for (Integer key: bst.keys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
 
-        for (Integer key: bst.loopKeys()) {
+//        for (Integer key: bst.loopKeys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+
+//        for (Integer key: bst.levelKeys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+        
+
+        BST<String, Integer> bst = new BST<>();
+        bst.put("C++", 0);
+        bst.put("C++", 2);
+        bst.put("Java", 0);
+        bst.put("Python", 0);
+        bst.put("C#", 1);
+        bst.put("JavaScript", 5);
+        bst.put("Ruby", 7);
+        bst.put("Swift", 8);
+        bst.put("Go", 3);
+        
+        bst.put("Python", 6);
+        bst.put("Java", 4);
+        bst.put("C#", 1);
+
+//        bst.delete("C#");
+//        bst.delete("C++");
+//        bst.delete("Go");
+//        bst.delete("Java");
+//        bst.delete("JavaScript");
+//        bst.delete("Python");
+//        bst.delete("Ruby");
+//        bst.delete("Swift");
+        bst.deleteMin();
+        bst.deleteMin();
+        bst.deleteMax();
+        bst.deleteMax();
+        
+        for (String key: bst.keys()) {
             System.out.println(key + ": " + bst.get(key));
         }
     }
@@ -520,7 +609,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         
         bst.clear();
         
-        for (String key: bst.loopKeys()) {
+        for (String key: bst.keys()) {
             System.out.println(key);
             System.out.println(key + ": " + bst.get(key));
         }
@@ -621,6 +710,11 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
             System.out.println(bst.rank(key));
             System.out.println();
         }
+
+//        System.out.println("" + bst.select(-1));
+//        System.out.println("" + bst.select(bst.size()));
+        System.out.println("" + bst.rank("A"));
+        System.out.println("" + bst.rank("Z"));
     }
     
     // test rank, select
