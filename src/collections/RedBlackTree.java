@@ -1,9 +1,5 @@
 package collections;
 
-import java.util.Random;
-
-import edu.princeton.cs.algs4.Stopwatch;
-
 public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
     
     private Node root;
@@ -720,33 +716,33 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
         System.out.println("" + bst.rank("Z"));
     }
     
-    private static void stressTest() {
-        System.out.println("******************stressTest()******************");
-        Stopwatch stopwatch = new Stopwatch();
-        System.out.println("stess test RBT iterator sorted");
-        System.out.println("=====================================================");
-        int size = 10000000;
-        
-        RedBlackTree<Integer, Integer> redBlackTree = new RedBlackTree<>();
-        for (int i = 0; i < size; i++) {
-            redBlackTree.put(i, null);
-        }
-        System.out.println(stopwatch.elapsedTime());
-        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
-        System.out.println();
-        
-        stopwatch = new Stopwatch();
-        System.out.println("stress test RBT delete");
-        Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            redBlackTree.put(random.nextInt(size * 100), null);
-//            redBlackTree.put(random.nextInt(size), null);
-            redBlackTree.delete(random.nextInt(size * 100));
-        }
-        System.out.println(stopwatch.elapsedTime());
-        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
-        System.out.println();
-    }
+//    private static void stressTest() {
+//        System.out.println("******************stressTest()******************");
+//        Stopwatch stopwatch = new Stopwatch();
+//        System.out.println("stess test RBT iterator sorted");
+//        System.out.println("=====================================================");
+//        int size = 10000000;
+//        
+//        RedBlackTree<Integer, Integer> redBlackTree = new RedBlackTree<>();
+//        for (int i = 0; i < size; i++) {
+//            redBlackTree.put(i, null);
+//        }
+//        System.out.println(stopwatch.elapsedTime());
+//        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
+//        System.out.println();
+//        
+//        stopwatch = new Stopwatch();
+//        System.out.println("stress test RBT delete");
+//        Random random = new Random();
+//        for (int i = 0; i < size; i++) {
+//            redBlackTree.put(random.nextInt(size * 100), null);
+////            redBlackTree.put(random.nextInt(size), null);
+//            redBlackTree.delete(random.nextInt(size * 100));
+//        }
+//        System.out.println(stopwatch.elapsedTime());
+//        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
+//        System.out.println();
+//    }
     
     // test rank, select
     public static void main(String[] args) {
