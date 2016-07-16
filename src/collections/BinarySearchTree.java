@@ -1,6 +1,6 @@
 package collections;
 
-public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
+public class BinarySearchTree<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
     
     private Node root;
 
@@ -22,7 +22,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private Node put(Node node, Key key, Value value) {
-        if (node == null) return new Node(key, value, 1);
+        if (node == null) return new Node(key, value);
         int cmp = key.compareTo(node.key);
         if (cmp < 0) node.left = put(node.left, key, value);
         else if (cmp > 0) node.right = put(node.right, key, value);
@@ -312,10 +312,10 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         private int size;
         private int height;
         
-        public Node(Key key, Value value, int size) {
+        public Node(Key key, Value value) {
             this.key = key;
             this.value = value;
-            this.size = size;
+            size = 1;
             height = 1;
             pred = null;
             succ = null;
@@ -394,7 +394,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testFloorCeiling() {
-        SymbolTable<Integer, Integer> st = new BST<Integer, Integer>();
+        SymbolTable<Integer, Integer> st = new BinarySearchTree<Integer, Integer>();
         st.put(1, 0);
         st.put(10, 1);
         st.put(100, 2);
@@ -424,7 +424,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testSizeHeight() {
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -469,7 +469,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testBasic() {
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -558,7 +558,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 //        }
         
 
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 2);
         bst.put("Java", 0);
@@ -592,7 +592,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testClear() {
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -650,7 +650,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void testBst() {
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -679,13 +679,13 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
     }
     
     private static void stressTestBst() {
-        BST<Integer, Integer> bst = new BST<>();
+        BinarySearchTree<Integer, Integer> bst = new BinarySearchTree<>();
         for (int i = 0; i < 1000; i++) bst.put(i, i);
         System.out.println(bst.isBST());
     }
     
     private static void testSelectRank() {
-        BST<String, Integer> bst = new BST<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
