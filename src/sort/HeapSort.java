@@ -1,34 +1,23 @@
 package sort;
 
-import java.util.Comparator;
+import java.util.Random;
 
-public class HeapSort<Item> {
-    private Comparator<Item> comparator;
-    private Item[] items;
+public class HeapSort {
     
-    public void sort(Item[] items, Comparator<Item> comparator) {
-        this.items = items;
-        this.comparator = comparator;
-        sort();
-    }
+    private static int[] items;
     
-    private void sort() {
+    public static void sort(int[] items) {
+        HeapSort.items = items;
         int n = items.length;
-        for (int i = n / 2; i >= 1; i--) sink(i, n);
+        for (int k = n / 2; k >= 1; k--) sink(k, n);
         while (n > 1) {
             swap(1, n--);
             sink(1, n);
         }
+        HeapSort.items = null;
     }
     
-    private void swim(int k) {
-        while (k > 1 && less(k / 2, k)) {
-            swap(k, k / 2);
-            k /= 2;
-        }
-    }
-    
-    private void sink(int k, int n) {
+    private static void sink(int k, int n) {
         while (k * 2 <= n) {
             int j = k * 2;
             if (j < n && less(j, j + 1)) j++;
@@ -38,14 +27,23 @@ public class HeapSort<Item> {
         }
     }
     
-    private boolean less(int i, int j) {
-        return comparator.compare(items[i - 1], items[j - 1]) < 0;
+    private static boolean less(int i, int j) {
+        return items[i - 1] < items[j - 1];
     }
     
-    private void swap(int i, int j) {
-        Item item = items[i - 1];
+    private static void swap(int i, int j) {
+        int temp = items[i - 1];
         items[i - 1] = items[j - 1];
-        items[j - 1] = item;
+        items[j - 1] = temp;
     }
     
+    public static void main(String[] args) {
+        int size = 9999999;
+        int[] items = new int[size];
+        Random random = new Random();
+        for (int i = 0; i < size; i++) items[i] = random.nextInt();
+        sort(items);
+        System.out.println(SortUtil.isSorted(items));
+    }
+
 }

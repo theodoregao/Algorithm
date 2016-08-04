@@ -1,25 +1,25 @@
 package sort;
 
-public class SelectionSort {
-    
-    public static void sort(Comparable[] comparables) {
-        int n = comparables.length;
-        for (int i = 0; i < n; i++) {
-            int min = i;
-            for (int j = i + 1; j < n; j++)
-                if (SortUtil.less(comparables[j], comparables[min])) min = j;
-            SortUtil.swap(comparables, i, min);
-        }
-    }
-    
-    public static void sort(int[] ints) {
-        int n = ints.length;
-        for (int i = 0; i < n; i++) {
-            int min = i;
-            for (int j = i + 1; j < n; j++)
-                if (ints[j] < ints[min]) min = j;
-            SortUtil.swap(ints, i, min);
-        }
-    }
+import java.util.Random;
 
+public class SelectionSort {
+
+    public static void sort(int[] items) {
+        for (int i = 0; i < items.length; i++) {
+            int min = i;
+            for (int j = i; j < items.length; j++)
+                if (items[min] > items[j]) min = j;
+            SortUtil.swap(items, i, min);
+        }
+    }
+    
+    public static void main(String[] args) {
+        int size = 10000;
+        int[] items = new int[size];
+        Random random = new Random();
+        for (int i = 0; i < size; i++) items[i] = random.nextInt();
+        sort(items);
+        System.out.println(SortUtil.isSorted(items));
+    }
+    
 }
