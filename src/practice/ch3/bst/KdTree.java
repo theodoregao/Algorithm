@@ -40,22 +40,22 @@ public class KdTree {
             return node;
         }
         
-        public Set<Point> intersect(Shape shape) {
+        public Set<Point> intersects(Shape shape) {
             Set<Point> points = new HashSet<>();
-            intersect(points, new Rectangle(new Point(0, 0), new Point(1, 1)), shape, root);
+            intersects(points, new Rectangle(new Point(0, 0), new Point(1, 1)), shape, root);
             return points;
         }
         
-        private void intersect(Set<Point> points, Rectangle area, Shape target, Node node) {
-            if (area == null || node == null || area == null || !area.intersect(target)) return;
+        private void intersects(Set<Point> points, Rectangle area, Shape target, Node node) {
+            if (area == null || node == null || area == null || !area.intersects(target)) return;
             Point point = node.key;
             point.draw();
             if (target.contains(point)) {
                 points.add(point);
                 point.draw(Color.RED);
             }
-            if (node.left != null) intersect(points, point.direction ? area.left(point.x) : area.down(point.y), target, node.left);
-            if (node.right != null) intersect(points, point.direction ? area.right(point.x) : area.up(point.y), target, node.right);
+            if (node.left != null) intersects(points, point.direction ? area.left(point.x) : area.down(point.y), target, node.left);
+            if (node.right != null) intersects(points, point.direction ? area.right(point.x) : area.up(point.y), target, node.right);
         }
         
         private Point candidate;
@@ -68,7 +68,7 @@ public class KdTree {
         }
 
         private void closestPoint(Node node, Rectangle area, Point target) {
-            if (node == null || area == null || !area.intersect(new Circle(target, target.distance(candidate)))) return;
+            if (node == null || area == null || !area.intersects(new Circle(target, target.distance(candidate)))) return;
             Point point = node.key;
             point.draw();
 //            StdIn.readLine();
@@ -189,7 +189,7 @@ public class KdTree {
     
     static interface Shape {
         boolean contains(Point point);
-        boolean intersect(Shape shape);
+        boolean intersects(Shape shape);
         void draw();
         void draw(Color color);
     }
@@ -207,17 +207,17 @@ public class KdTree {
         }
         
         @Override
-        public boolean intersect(Shape shape) {
-            if (shape instanceof Rectangle) return intersect((Rectangle) shape);
-            else if (shape instanceof Circle) return intersect((Circle) shape);
+        public boolean intersects(Shape shape) {
+            if (shape instanceof Rectangle) return intersects((Rectangle) shape);
+            else if (shape instanceof Circle) return intersects((Circle) shape);
             return false;
         }
         
-        boolean intersect(Circle circle) {
+        boolean intersects(Circle circle) {
             return KdTree.intersect(this, circle);
         }
         
-        boolean intersect(Rectangle rectangle) {
+        boolean intersects(Rectangle rectangle) {
             return !(p.x > rectangle.q.x ||
                     q.x < rectangle.p.x ||
                     p.y > rectangle.q.y ||
@@ -315,14 +315,19 @@ public class KdTree {
         }
         
         @Override
-        public boolean intersect(Shape shape) {
-            if (shape instanceof Rectangle) return intersect((Rectangle) shape);
-            else if (shape instanceof Circle) return intersect((Circle) shape);
+        public boolean intersects(Shape shape) {
+            if (shape instanceof Rectangle) return intersects((Rectangle) shape);
+            else if (shape instanceof Circle) return intersects((Circle) shape);
             return false;
         }
         
-        boolean intersect(Rectangle rectangle) {
+        boolean intersects(Rectangle rectangle) {
             return KdTree.intersect(rectangle, this);
+        }
+        
+        boolean intersects(Circle circle) {
+            if (circle == null) return false;
+            return center.distance(circle.center) < radius + circle.radius;
         }
         
         @Override
@@ -380,7 +385,7 @@ public class KdTree {
             Circle circle = Circle.randomCircle();
             
             StdDraw.clear();
-            if (circle.intersect(rectangle)) {
+            if (circle.intersects(rectangle)) {
                 circle.draw(Color.RED);
                 rectangle.draw(Color.RED);
             }
@@ -399,7 +404,7 @@ public class KdTree {
             Rectangle rectangleOther = Rectangle.randomRectangle();
             
             StdDraw.clear();
-            if (rectangleOther.intersect(rectangle)) {
+            if (rectangleOther.intersects(rectangle)) {
                 rectangleOther.draw(Color.RED);
                 rectangle.draw(Color.RED);
             }
@@ -443,7 +448,7 @@ public class KdTree {
         
 //        for (Point point: twodTree.levelKeys()) System.out.println(point);
         
-        for (Point point: twodTree.intersect(circle)) point.draw(Color.RED);
+        for (Point point: twodTree.intersects(circle)) point.draw(Color.RED);
 //        circle.draw(Color.RED);
     }
     
@@ -461,7 +466,7 @@ public class KdTree {
         
 //        for (Point point: twodTree.levelKeys()) System.out.println(point);
         
-        for (Point point: twodTree.intersect(rectangle)) point.draw(Color.RED);
+        for (Point point: twodTree.intersects(rectangle)) point.draw(Color.RED);
 //        rectangle.draw(Color.RED);
     }
 
