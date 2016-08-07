@@ -208,9 +208,10 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> implements Sym
 
     @Override
     public int size(Key lo, Key hi) {
-        Queue<Key> queue = new LinkedQueue<Key>();
-        keys(root, queue, lo, hi);
-        return queue.size();
+        return contains(hi) ? rank(hi) - rank(lo) + 1 : rank(hi) - rank(lo);
+//        Queue<Key> queue = new LinkedQueue<Key>();
+//        keys(root, queue, lo, hi);
+//        return queue.size();
     }
     
     @Override
