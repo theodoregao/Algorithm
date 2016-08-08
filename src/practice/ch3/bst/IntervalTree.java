@@ -51,26 +51,33 @@ public class IntervalTree {
         static final boolean RED = true;
         static final boolean BLK = false;
         double key;
-        Interval value;
+        Interval value, interval;
         int size, height;
-        double minlo, maxhi;
         Node left, right;
         boolean color;
         
         Node (Interval value) {
             this.key = value.lo;
             this.value = value;
+            interval = value;
             size = height = 1;
-            minlo = value.lo;
-            maxhi = value.hi;
             color = RED;
         }
         
         void reset() {
             size = (left == null ? 0 : left.size) + (right == null ? 0 : right.size) + 1;
             height = Math.max(left == null ? 0 : left.height, right == null ? 0 : right.height) + 1;
-            minlo = Math.min(value.lo, Math.min(left == null ? Integer.MAX_VALUE : left.minlo, right == null ? Integer.MAX_VALUE : right.minlo));
-            maxhi = Math.max(value.hi, Math.max(left == null ? Integer.MIN_VALUE : left.maxhi, right == null ? Integer.MIN_VALUE : right.maxhi));
+            interval = new Interval(
+                    min(interval.lo, left == null ? interval.lo : left.interval.lo, right == null ? interval.lo : right.interval.lo),
+                    max(interval.hi, left == null ? interval.hi : left.interval.hi, right == null ? interval.hi : right.interval.hi));
+        }
+        
+        private double min(double a, double b, double c) {
+            return Math.min(a, Math.min(b, c));
+        }
+        
+        private double max(double a, double b, double c) {
+            return Math.max(a, Math.max(b, c));
         }
         
         boolean isRed(Node node) {
@@ -143,13 +150,14 @@ public class IntervalTree {
         if (node == null) return null;
         count++;
         if (node.value.intersects(interval)) return node.value;
-        else if (node.left == null || node.left.maxhi < interval.lo) return intersects(node.right, interval);
+        else if (node.left == null || node.left.interval.hi < interval.lo) return intersects(node.right, interval);
         else return intersects(node.left, interval);
     }
     
     public List<Interval> intersectsAll(Interval interval) {
         List<Interval> intervals = new ArrayList<>();
         intersectsAll(root, intervals, interval);
+//        intersectsAllBruteForce(root, intervals, interval);
         return intervals;
     }
     
@@ -161,9 +169,17 @@ public class IntervalTree {
 //            intersectsAll(node.left, intervals, interval);
 //            intersectsAll(node.right, intervals, interval);
 //        }
-        if (node.left != null && new Interval(node.left.minlo, node.left.maxhi).intersects(interval)) intersectsAll(node.left, intervals, interval);
+        if (node.left != null && node.left.interval.intersects(interval)) intersectsAll(node.left, intervals, interval);
         if (node.value.intersects(interval)) intervals.add(node.value);
-        if (node.right != null && new Interval(node.right.minlo, node.right.maxhi).intersects(interval)) intersectsAll(node.right, intervals, interval);
+        if (node.right != null && node.right.interval.intersects(interval)) intersectsAll(node.right, intervals, interval);
+    }
+    
+    private void intersectsAllBruteForce(Node node, List<Interval> intervals, Interval interval) {
+        if (node == null) return;
+        count++;
+        if (node.left != null) intersectsAllBruteForce(node.left, intervals, interval);
+        if (node.value.intersects(interval)) intervals.add(node.value);
+        if (node.right != null) intersectsAllBruteForce(node.right, intervals, interval);
     }
     
     public int size() {
@@ -202,18 +218,18 @@ public class IntervalTree {
         Arrays.sort(intervals);
         for (int i = 0; i < size; i++) intervalTree.put(intervals[i]);
         intervalTree.put(new Interval(1.0, 1.01));
-        System.out.println(intervalTree.root.minlo);
-        System.out.println(intervalTree.root.maxhi);
+        System.out.println(intervalTree.root.interval);
 //        System.out.println(intervalTree.size());
 //        System.out.println(intervalTree.height());
 //        intervalTree.print();
-        
-        Interval target = new Interval(1.005, 1.009);
-        System.out.println(intervalTree.intersects(target));
         System.out.println();
-//        List<Interval> intervals = intervalTree.intersectsAll(target);
-//        System.out.println(intervals.size());
-//        for (Interval interval: intervals) System.out.println(interval);
+        
+//        Interval target = new Interval(1.005, 1.009);
+//        System.out.println(intervalTree.intersects(target));
+        Interval target = new Interval(0.99995, 0.99996);
+        List<Interval> intersectIntervals = intervalTree.intersectsAll(target);
+        System.out.println(intersectIntervals.size());
+        for (Interval interval: intersectIntervals) System.out.println(interval);
         System.out.println(count);
     }
 
