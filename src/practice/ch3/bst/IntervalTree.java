@@ -162,16 +162,16 @@ public class IntervalTree {
     }
     
     private void intersectsAll(Node node, List<Interval> intervals, Interval interval) {
-        if (node == null) return;
+        if (node == null || !node.interval.intersects(interval)) return;
         count++;
 //        if (node.left == null || node.left.maxhi < interval.lo) intersectsAll(node.right, intervals, interval);
 //        else {
 //            intersectsAll(node.left, intervals, interval);
 //            intersectsAll(node.right, intervals, interval);
 //        }
-        if (node.left != null && node.left.interval.intersects(interval)) intersectsAll(node.left, intervals, interval);
+        if (node.left != null) intersectsAll(node.left, intervals, interval);
         if (node.value.intersects(interval)) intervals.add(node.value);
-        if (node.right != null && node.right.interval.intersects(interval)) intersectsAll(node.right, intervals, interval);
+        if (node.right != null) intersectsAll(node.right, intervals, interval);
     }
     
     private void intersectsAllBruteForce(Node node, List<Interval> intervals, Interval interval) {
