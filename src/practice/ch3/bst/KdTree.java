@@ -364,7 +364,7 @@ public class KdTree {
     }
     
     public static void main(String[] args) {
-        testTwodTreeDraw();
+        testClosestPoint();
     }
     
     private static void testTwodTreeDraw() {
@@ -418,7 +418,7 @@ public class KdTree {
     }
     
     private static void testClosestPoint() {
-        Bag<Point> points = Point.randomPoints(10000);
+        Bag<Point> points = Point.randomPoints(1000);
         TwodTree twodTree = new TwodTree();
         
         Point point = Point.randomPoint();
@@ -428,6 +428,7 @@ public class KdTree {
             pt.draw(Color.GRAY);
             twodTree.put(pt, pt);
         }
+        twodTree.draw();
         
         twodTree.closestPointBruteForce(point).draw(Color.ORANGE);
         

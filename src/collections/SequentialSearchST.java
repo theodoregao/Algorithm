@@ -24,13 +24,9 @@ public class SequentialSearchST<Key, Value> implements Iterable<Key> {
     }
     
     public Value get(Key key) {
-//        System.out.println("get()");
-        for (Node node = first; node != null; node = node.next)
-            if (key.equals(node.key)) {
-//                System.out.println("get return");
-                return node.value;
-            }
-//        System.out.println("get return null");
+        for (Node node = first; node != null; node = node.next) if (key.equals(node.key)) {
+            return node.value;
+        }
         return null;
     }
     
