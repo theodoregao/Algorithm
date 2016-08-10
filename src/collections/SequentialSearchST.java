@@ -24,8 +24,13 @@ public class SequentialSearchST<Key, Value> implements Iterable<Key> {
     }
     
     public Value get(Key key) {
+//        System.out.println("get()");
         for (Node node = first; node != null; node = node.next)
-            if (key.equals(node.key)) return node.value;
+            if (key.equals(node.key)) {
+//                System.out.println("get return");
+                return node.value;
+            }
+//        System.out.println("get return null");
         return null;
     }
     
@@ -44,8 +49,8 @@ public class SequentialSearchST<Key, Value> implements Iterable<Key> {
         for (Node node = first; node != null; preNode = node, node = node.next) if (key.equals(node.key)) {
             if (preNode == null) first = node.next;
             else preNode.next = node.next;
+            size--;
         }
-        size--;
     }
 
     @Override
