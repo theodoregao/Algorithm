@@ -23,11 +23,6 @@ public class IntervalTree {
             return !(lo > interval.hi || hi < interval.lo);
         }
         
-        public void draw(double deltaX, double deltaY, double delta, int height) {
-            StdDraw.line((lo - delta) * 2 * deltaX, height * deltaY, ((hi - delta) * 2 - 1) * deltaX, height * deltaY);
-            System.out.println(this);
-        }
-        
         @Override
         public String toString() {
             return String.format(Interval.class.getSimpleName() + "[%.4f, %.4f]", lo, hi);
