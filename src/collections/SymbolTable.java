@@ -1,13 +1,6 @@
 package collections;
 
-public interface SymbolTable<Key extends Comparable<Key>, Value> {
-    
-    void put(Key key, Value value);
-    Value get(Key key);
-    boolean contains(Key key);
-    boolean isEmpty();
-    int size();
-
+public interface SymbolTable<Key extends Comparable<Key>, Value> extends Map<Key, Value> {
     Key min();
     Key max();
     Key floor(Key key);
@@ -17,8 +10,6 @@ public interface SymbolTable<Key extends Comparable<Key>, Value> {
     
     void deleteMin();
     void deleteMax();
-    void delete(Key key);
     int size(Key lo, Key hi);
-    Iterable<Key> keys();
     Iterable<Key> keys(Key lo, Key hi);
 }

@@ -2,37 +2,62 @@ package collections;
 
 import java.util.Iterator;
 
-public class SeparateChainingHashST<Key, Value> {
+public class SeparateChainingHashST<Key, Value> implements Map<Key, Value> {
     
     private static final int DEFAULT_CAPACITY = 64;
     private static final int SIZE_PER_UNIT = 4;
    
-    private int capacity;
     private int size;
     private SequentialSearchST<Key, Value>[] st;
     
     public SeparateChainingHashST() {
         resize(DEFAULT_CAPACITY);
     }
-    
+
+    @Override
     public void put(Key key, Value value) {
         resize();
         if (get(key) == null) size++;
         put(st, key, value);
     }
-    
+
     private void put(SequentialSearchST<Key, Value>[] st, Key key, Value value) {
         st[hash(key)].put(key, value);
     }
-    
+
+    @Override
     public void delete(Key key) {
         if (get(key) != null) size--;
         st[hash(key)].delete(key);
         resize();
     }
-    
+
+    @Override
+    public boolean contains(Key key) {
+        return st[hash(key)].get(key) != null;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
     public Value get(Key key) {
         return st[hash(key)].get(key);
+    }
+
+    @Override
+    public Iterable<Key> keys() {
+        Bag<Key> keySet = new LinkedBag<>();
+        for (SequentialSearchST<Key, Value> keys: st)
+            for (Key key: keys) keySet.add(key);
+        return keySet;
     }
     
     private int hash(Key key) {
@@ -47,7 +72,6 @@ public class SeparateChainingHashST<Key, Value> {
     
     private void resize(int capacity) {
 //        System.out.println("resize() " + capacity);
-        this.capacity = capacity;
         SequentialSearchST<Key, Value>[] oldST = st;
         st = new SequentialSearchST[capacity];
         for (int i = 0; i < st.length; i++) st[i] = new SequentialSearchST<>();

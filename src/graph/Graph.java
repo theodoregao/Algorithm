@@ -1,10 +1,9 @@
 package graph;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import collections.Bag;
+import collections.LinearProbingHashST;
 import collections.LinkedBag;
+import collections.Map;
 
 public class Graph<Key> {
     
@@ -19,7 +18,7 @@ public class Graph<Key> {
     }
 
     public Graph(int vertexCount) {
-        vertex = new HashMap<>();
+        vertex = new LinearProbingHashST<>();
         resize(vertexCount);
     }
     
@@ -32,11 +31,11 @@ public class Graph<Key> {
     }
     
     public void addEdge(Key v, Key w) {
-        if (!vertex.containsKey(v)) {
+        if (!vertex.contains(v)) {
             if (vertex.size() >= adj.length) resize(adj.length * 2);
             vertex.put(v, vertex.size());
         }
-        if (!vertex.containsKey(w)) {
+        if (!vertex.contains(w)) {
             if (vertex.size() >= adj.length) resize(adj.length * 2);
             vertex.put(w, vertex.size());
         }
@@ -55,11 +54,11 @@ public class Graph<Key> {
     }
     
     public Iterable<Key> vertexes() {
-        return vertex.keySet();
+        return vertex.keys();
     }
     
     public Iterable<Key> adj(Key v) {
-        if (!vertex.containsKey(v)) return new LinkedBag<Key>();
+        if (!vertex.contains(v)) return new LinkedBag<Key>();
         return adj[vertex.get(v)];
     }
     
@@ -72,7 +71,7 @@ public class Graph<Key> {
         StringBuilder stringBuilder = new StringBuilder(Graph.class.getSimpleName());
         stringBuilder.append(": vertex: ").append(vertexCount())
                     .append(" edge: ").append(edgeCount).append(" {\n");
-        for (Key v: vertex.keySet()) {
+        for (Key v: vertex.keys()) {
             stringBuilder.append("\t").append(v).append(": [");
             for (Key w: adj(v)) stringBuilder.append(w).append(", ");
             stringBuilder.append("],\n");

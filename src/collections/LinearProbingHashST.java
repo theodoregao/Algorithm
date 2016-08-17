@@ -1,6 +1,6 @@
 package collections;
 
-public class LinearProbingHashST<Key, Value> {
+public class LinearProbingHashST<Key, Value> implements Map<Key, Value> {
     
     private static final int DEFAULT_CAPACITY = 64;
     
@@ -16,7 +16,8 @@ public class LinearProbingHashST<Key, Value> {
     public LinearProbingHashST() {
         resize(DEFAULT_CAPACITY);
     }
-    
+
+    @Override
     public void put(Key key, Value value) {
         resize();
         if (get(key) == null) size++;
@@ -29,7 +30,8 @@ public class LinearProbingHashST<Key, Value> {
         keys[index] = key;
         values[index] = value;
     }
-    
+
+    @Override
     public void delete(Key key) {
         if (get(key) == null) return;
         size--;
@@ -48,7 +50,32 @@ public class LinearProbingHashST<Key, Value> {
             index = ++index % keys.length;
         }
     }
-    
+
+    @Override
+    public Iterable<Key> keys() {
+        Bag<Key> keySet = new LinkedBag<>();
+        for (Key key: keys) if (key != null) keySet.add(key);
+        return keySet;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public boolean contains(Key key) {
+        int index = hash(key);
+        while (keys[index] != null && !key.equals(keys[index])) index = ++index % keys.length;
+        return values[index] != null;
+    }
+
+    @Override
     public Value get(Key key) {
         int index = hash(key);
         while (keys[index] != null && !key.equals(keys[index])) index = ++index % keys.length;

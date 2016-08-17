@@ -39,15 +39,18 @@ public class DepthFirstSearch<Key> {
     }
     
     public static void main(String[] args) {
-        In in = new In("data/cities.txt");
-        Graph<String> cities = new Graph<>();
-        while (in.hasNextLine()) cities.addEdge(in.readString(), in.readString());
-        System.out.println(cities.toString());
+        In in = new In("data/mediumG.txt");
         
-        DepthFirstSearch<String> dfs = new DepthFirstSearch<>(cities, "CA");
+        Graph<Integer> vertex = new Graph<>(in.readInt());
+        in.readInt();
+        
+        while (in.hasNextLine()) vertex.addEdge(in.readInt(), in.readInt());
+        System.out.println(vertex.toString());
+        
+        DepthFirstSearch<Integer> dfs = new DepthFirstSearch<>(vertex, 0);
         System.out.println(dfs.count);
         
-        for (String city: cities.vertexes()) System.out.println("CA has path to " + city + " : " + dfs.hasPathTo(city));
+        for (Integer key: vertex.vertexes()) System.out.println("0 has path to " + key + " : " + dfs.hasPathTo(key));
     }
 
 }
