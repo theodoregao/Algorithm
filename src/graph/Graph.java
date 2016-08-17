@@ -22,7 +22,7 @@ public class Graph<Key> {
         resize(vertexCount);
     }
     
-    public int vertexCount() {
+    public int size() {
         return vertex.size();
     }
     
@@ -46,14 +46,14 @@ public class Graph<Key> {
     
     private void resize(int capacity) {
         Bag<Key>[] adj = new Bag[capacity];
-        for (int i = 0; i < vertexCount(); i++) adj[i] = this.adj[i];
-        for (int i = vertexCount(); i < capacity; i++) {
+        for (int i = 0; i < size(); i++) adj[i] = this.adj[i];
+        for (int i = size(); i < capacity; i++) {
             adj[i] = new LinkedBag<>();
         }
         this.adj = adj;
     }
     
-    public Iterable<Key> vertexes() {
+    public Iterable<Key> keys() {
         return vertex.keys();
     }
     
@@ -69,12 +69,12 @@ public class Graph<Key> {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder(Graph.class.getSimpleName());
-        stringBuilder.append(": vertex: ").append(vertexCount())
+        stringBuilder.append(": vertex: ").append(size())
                     .append(" edge: ").append(edgeCount).append(" {\n");
         for (Key v: vertex.keys()) {
             stringBuilder.append("\t").append(v).append(": [");
             for (Key w: adj(v)) stringBuilder.append(w).append(", ");
-            stringBuilder.append("],\n");
+            stringBuilder.append("]\n");
         }
         stringBuilder.append("}");
         return stringBuilder.toString();

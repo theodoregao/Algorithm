@@ -1,29 +1,37 @@
 package graph;
 
+import collections.LinkedQueue;
 import collections.LinkedStack;
+import collections.Queue;
 import collections.Stack;
 import edu.princeton.cs.algs4.In;
 
-public class DepthFirstSearch<Key> {
+public class BreadthFirstSearch<Key> {
     
     private Graph<Key> graph;
     private boolean[] marked;
     private Key source;
     private Key[] edgeFrom;
     
-    public DepthFirstSearch(Graph<Key> graph, Key source) {
+    public BreadthFirstSearch(Graph<Key> graph, Key source) {
         this.source = source;
         this.graph = graph;
         marked = new boolean[graph.size()];
         edgeFrom = (Key[]) new Object[graph.size()];
-        dfs(source);
+        bfs(source);
     }
     
-    private void dfs(Key v) {
+    private void bfs(Key v) {
         marked[graph.getIndex(v)] = true;
-        for (Key w: graph.adj(v)) if (!marked[graph.getIndex(w)]) {
-            edgeFrom[graph.getIndex(w)] = v;
-            dfs(w);
+        Queue<Key> queue = new LinkedQueue<Key>();
+        queue.enqueue(v);
+        while (!queue.isEmpty()) {
+            Key vertex = queue.dequeue();
+            for (Key w: graph.adj(vertex)) if (!marked[graph.getIndex(w)]) {
+                marked[graph.getIndex(w)] = true;
+                edgeFrom[graph.getIndex(w)] = vertex;
+                queue.enqueue(w);
+            }
         }
     }
     
@@ -52,12 +60,12 @@ public class DepthFirstSearch<Key> {
         while (in.hasNextLine()) graph.addEdge(in.readInt(), in.readInt());
         System.out.println(graph.toString());
         
-        DepthFirstSearch<Integer> dfs = new DepthFirstSearch<>(graph, 0);
+        BreadthFirstSearch<Integer> bfs = new BreadthFirstSearch<>(graph, 0);
         
         for (Integer v: graph.keys()) {
-            if (dfs.hasPathTo(v)) {
+            if (bfs.hasPathTo(v)) {
                 System.out.println("path to " + v);
-                for (Integer w: dfs.pathTo(v)) System.out.print(w + " ");
+                for (Integer w: bfs.pathTo(v)) System.out.print(w + " ");
                 System.out.println();
             }
         }
