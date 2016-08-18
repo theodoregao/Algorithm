@@ -1,34 +1,39 @@
 package graph;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import collections.LinearProbingHashST;
 import collections.LinkedStack;
+import collections.Map;
 import collections.Stack;
 import edu.princeton.cs.algs4.In;
 
 public class DepthFirstSearch<Key> {
     
-    private Graph<Key> graph;
-    private boolean[] marked;
+    private GraphDeletable<Key> graph;
+    private Set<Key> marked;
+    private Map<Key, Key> edgeFrom;
     private Key source;
-    private Key[] edgeFrom;
     
-    public DepthFirstSearch(Graph<Key> graph, Key source) {
+    public DepthFirstSearch(GraphDeletable<Key> graph, Key source) {
         this.source = source;
         this.graph = graph;
-        marked = new boolean[graph.size()];
-        edgeFrom = (Key[]) new Object[graph.size()];
+        marked = new HashSet<>();
+        edgeFrom = new LinearProbingHashST<>();
         dfs(source);
     }
     
     private void dfs(Key v) {
-        marked[graph.getIndex(v)] = true;
-        for (Key w: graph.adj(v)) if (!marked[graph.getIndex(w)]) {
-            edgeFrom[graph.getIndex(w)] = v;
+        marked.add(v);
+        for (Key w: graph.adj(v)) if (!marked.contains(w)) {
+            edgeFrom.put(w, v);;
             dfs(w);
         }
     }
     
     private boolean marked(Key v) {
-        return marked[graph.getIndex(v)];
+        return marked.contains(v);
     }
     
     public boolean hasPathTo(Key v) {
@@ -38,7 +43,7 @@ public class DepthFirstSearch<Key> {
     public Iterable<Key> pathTo(Key v) {
         if (!hasPathTo(v)) return null;
         Stack<Key> path = new LinkedStack<Key>();
-        for (Key x = v; !source.equals(x); x = edgeFrom[graph.getIndex(x)]) path.push(x);
+        for (Key x = v; !source.equals(x); x = edgeFrom.get(x)) path.push(x);
         path.push(source);
         return path;
     }
@@ -46,7 +51,8 @@ public class DepthFirstSearch<Key> {
     public static void main(String[] args) {
         In in = new In("data/tinyG.txt");
         
-        Graph<Integer> graph = new Graph<>(in.readInt());
+        GraphDeletable<Integer> graph = new GraphDeletable<>();
+        in.readInt();
         in.readInt();
         
         while (in.hasNextLine()) graph.addEdge(in.readInt(), in.readInt());
