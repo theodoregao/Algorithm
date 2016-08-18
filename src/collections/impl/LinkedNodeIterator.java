@@ -1,18 +1,18 @@
-package collections;
+package collections.impl;
 
 import java.util.Iterator;
 
-class DoubleLinkedNodeIterator<Item> implements Iterator<Item> {
+public class LinkedNodeIterator<Item> implements Iterator<Item> {
     
-    private DoubleLinkedNode<Item> current;
+    private Node<Item> current;
     private int size;
     
-    public DoubleLinkedNodeIterator(DoubleLinkedNode<Item> node) {
-        this(node, Integer.MAX_VALUE);
+    public LinkedNodeIterator(Node<Item> current) {
+        this(current,  Integer.MAX_VALUE);
     }
     
-    public DoubleLinkedNodeIterator(DoubleLinkedNode<Item> node, int size) {
-        current = node;
+    public LinkedNodeIterator(Node<Item> current, int size) {
+        this.current = current;
         this.size = size;
     }
 

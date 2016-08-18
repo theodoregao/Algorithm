@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import collections.Bag;
-import collections.LinkedBag;
-import collections.LinkedQueue;
-import collections.LinkedStack;
 import collections.Queue;
 import collections.Stack;
+import collections.impl.bag.LinkedBag;
+import collections.impl.queue.LinkedQueue;
+import collections.impl.stack.LinkedStack;
 import edu.princeton.cs.algs4.In;
 
 public class EulerCircuit<Key> {

@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-import collections.Heap;
-import collections.StdRandom;
+import collections.impl.StdRandom;
+import collections.impl.heap.Heap;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class OrthogonalLineSegmentItersection {

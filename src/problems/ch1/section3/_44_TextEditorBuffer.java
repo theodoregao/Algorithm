@@ -1,7 +1,7 @@
 package problems.ch1.section3;
 
-import collections.ResizingArrayStack;
 import collections.Stack;
+import collections.impl.stack.ResizingArrayStack;
 
 public class _44_TextEditorBuffer {
     

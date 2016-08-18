@@ -2,7 +2,7 @@ package problems.ch2.section5;
 
 import java.util.Comparator;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class _26_SimplePolygon {

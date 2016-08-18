@@ -2,7 +2,7 @@ package algorithms;
 
 import java.io.IOException;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class UnionFind {
     

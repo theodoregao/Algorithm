@@ -2,7 +2,7 @@ package problems.ch1.section4;
 
 import java.util.Arrays;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _16_ClosestPair1d {
     

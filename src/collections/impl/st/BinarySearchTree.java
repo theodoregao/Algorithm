@@ -1,13 +1,18 @@
-package collections;
+package collections.impl.st;
 
-public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
+import collections.Queue;
+import collections.Stack;
+import collections.SymbolTable;
+import collections.impl.queue.LinkedQueue;
+import collections.impl.stack.LinkedStack;
+
+public class BinarySearchTree<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
     
     private Node root;
 
     @Override
     public void put(Key key, Value value) {
         root = put(root, key, value);
-        root.color = Node.BLACK;
         int rank = rank(key);
         Node node = select(root, rank);
         if (rank > 0) {
@@ -24,16 +29,10 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     
     private Node put(Node node, Key key, Value value) {
         if (node == null) return new Node(key, value);
-        
         int cmp = key.compareTo(node.key);
         if (cmp < 0) node.left = put(node.left, key, value);
         else if (cmp > 0) node.right = put(node.right, key, value);
         else node.value = value;
-        
-        node = node.rotateLeft();
-        node = node.rotateRight();
-        node.flipColors();
-        
         node.reset();
         return node;
     }
@@ -215,9 +214,10 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
 
     @Override
     public int size(Key lo, Key hi) {
-        Queue<Key> queue = new LinkedQueue<Key>();
-        keys(root, queue, lo, hi);
-        return queue.size();
+        return contains(hi) ? rank(hi) - rank(lo) + 1 : rank(hi) - rank(lo);
+//        Queue<Key> queue = new LinkedQueue<Key>();
+//        keys(root, queue, lo, hi);
+//        return queue.size();
     }
     
     @Override
@@ -313,16 +313,11 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
 
     private class Node {
-
-        private static final boolean RED = true;
-        private static final boolean BLACK = false;
-        
         private Key key;
         private Value value;
         private Node left, right, pred, succ;
         private int size;
         private int height;
-        private boolean color;
         
         public Node(Key key, Value value) {
             this.key = key;
@@ -331,47 +326,6 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
             height = 1;
             pred = null;
             succ = null;
-            color = RED;
-        }
-        
-        public Node rotateLeft() {
-            if (isRed(right) && !isRed(left)) {
-                Node x = right;
-                right = x.left;
-                x.left = this;
-                x.color = color;
-                color = RED;
-                reset();
-                x.reset();
-                return x;
-            }
-            return this;
-        }
-        
-        public Node rotateRight() {
-            if (isRed(left) && isRed(left.left)) {
-                Node x = left;
-                left = x.right;
-                x.right = this;
-                x.color = color;
-                color = RED;
-                reset();
-                x.reset();
-                return x;
-            }
-            return this;
-        }
-        
-        public void flipColors() {
-            if (isRed(left) && isRed(right)) {
-                color = RED;
-                left.color = BLACK;
-                right.color = BLACK;
-            }
-        }
-        
-        private boolean isRed(Node node) {
-            return node != null && node.color;
         }
         
         public int resolveSize() {
@@ -447,7 +401,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
     
     private static void testFloorCeiling() {
-        SymbolTable<Integer, Integer> st = new RedBlackTree<Integer, Integer>();
+        SymbolTable<Integer, Integer> st = new BinarySearchTree<Integer, Integer>();
         st.put(1, 0);
         st.put(10, 1);
         st.put(100, 2);
@@ -477,7 +431,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
     
     private static void testSizeHeight() {
-        RedBlackTree<String, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -522,8 +476,8 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
     
     private static void testBasic() {
-        System.out.println("******************testBasic()******************");
-        RedBlackTree<String, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
+        bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
         bst.put("Python", 0);
@@ -540,11 +494,6 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
         for (String key: bst.keys()) {
             System.out.println(key + ": " + bst.get(key));
         }
-
-        System.out.println("min: " + bst.min());
-        System.out.println("max: " + bst.max());
-        
-        System.out.println();
         
         // test delete
         bst.delete("C++");
@@ -560,38 +509,97 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
 
         System.out.println("min: " + bst.min());
         System.out.println("max: " + bst.max());
+        
+        // test rank, select
+        System.out.println("" + bst.rank("Gn"));
+        System.out.println("" + bst.rank("Go"));
+        System.out.println("" + bst.rank("Gp"));
+        System.out.println("" + bst.rank("Jav"));
+        System.out.println("" + bst.rank("Java"));
+        System.out.println("" + bst.rank("JavaA"));
+        System.out.println("" + bst.rank("Rubx"));
+        System.out.println("" + bst.rank("Ruby"));
+        System.out.println("" + bst.rank("Rubz"));
+        for (int i = 0; i < bst.size(); i++)
+            System.out.println(bst.select(i));
+        
+        // test floor, ceiling
+        System.out.println("" + bst.floor("Gn"));
+        System.out.println("" + bst.floor("Go"));
+        System.out.println("" + bst.floor("Gp"));
+        System.out.println("" + bst.floor("Jav"));
+        System.out.println("" + bst.floor("Java"));
+        System.out.println("" + bst.floor("JavaA"));
+        System.out.println("" + bst.floor("Rubx"));
+        System.out.println("" + bst.floor("Ruby"));
+        System.out.println("" + bst.floor("Rubz"));
+
+        System.out.println("" + bst.ceiling("Gn"));
+        System.out.println("" + bst.ceiling("Go"));
+        System.out.println("" + bst.ceiling("Gp"));
+        System.out.println("" + bst.ceiling("Jav"));
+        System.out.println("" + bst.ceiling("Java"));
+        System.out.println("" + bst.ceiling("JavaA"));
+        System.out.println("" + bst.ceiling("Rubx"));
+        System.out.println("" + bst.ceiling("Ruby"));
+        System.out.println("" + bst.ceiling("Rubz"));
     }
     
     private static void testIterator() {
-        System.out.println("******************testIterator()******************");
-        System.out.println("test RBT iterator sorted");
-        System.out.println("=====================================================");
-        int size = 10000;
-        RedBlackTree<Integer, Integer> redBlackTree = new RedBlackTree<>();
-        for (int i = 0; i < size; i++) redBlackTree.put(i, null);
+//        BST<Integer, Integer> bst = new BST<>();
+//        for (int i = 0; i < 1000; i++) {
+//            bst.put(i, i);
+//            bst.put(-i, -i);
+//        }
         
-        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
-        System.out.println();
-    }
-    
-    private static <Key extends Comparable<Key>, Value> boolean isSorted(RedBlackTree<Key, Value> redBlackTree) {
-        System.out.println("size: " + redBlackTree.size());
-        System.out.println("height: " + redBlackTree.height());
-        System.out.println("min: " + redBlackTree.min());
-        System.out.println("max: " + redBlackTree.max());
-        Key min = redBlackTree.min();
-        for (Key key: redBlackTree.keys()) {
-            if (key.compareTo(min) < 0) {
-                System.out.println("failed at: " + key);
-                return false;
-            }
-            min = key;
+//        for (Integer key: bst.keys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+
+//        for (Integer key: bst.loopKeys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+
+//        for (Integer key: bst.levelKeys()) {
+//            System.out.println(key + ": " + bst.get(key));
+//        }
+        
+
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
+        bst.put("C++", 0);
+        bst.put("C++", 2);
+        bst.put("Java", 0);
+        bst.put("Python", 0);
+        bst.put("C#", 1);
+        bst.put("JavaScript", 5);
+        bst.put("Ruby", 7);
+        bst.put("Swift", 8);
+        bst.put("Go", 3);
+        
+        bst.put("Python", 6);
+        bst.put("Java", 4);
+        bst.put("C#", 1);
+
+//        bst.delete("C#");
+//        bst.delete("C++");
+//        bst.delete("Go");
+//        bst.delete("Java");
+//        bst.delete("JavaScript");
+//        bst.delete("Python");
+//        bst.delete("Ruby");
+//        bst.delete("Swift");
+        bst.deleteMin();
+        bst.deleteMin();
+        bst.deleteMax();
+        bst.deleteMax();
+        
+        for (String key: bst.keys()) {
+            System.out.println(key + ": " + bst.get(key));
         }
-        return true;
     }
     
     private static void testClear() {
-        RedBlackTree<String, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -649,7 +657,7 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
     
     private static void testBst() {
-        RedBlackTree<String, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -678,13 +686,13 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
     }
     
     private static void stressTestBst() {
-        RedBlackTree<Integer, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<Integer, Integer> bst = new BinarySearchTree<>();
         for (int i = 0; i < 1000; i++) bst.put(i, i);
         System.out.println(bst.isBST());
     }
     
     private static void testSelectRank() {
-        RedBlackTree<String, Integer> bst = new RedBlackTree<>();
+        BinarySearchTree<String, Integer> bst = new BinarySearchTree<>();
         bst.put("C++", 0);
         bst.put("C++", 1);
         bst.put("Java", 0);
@@ -716,42 +724,35 @@ public class RedBlackTree<Key extends Comparable<Key>, Value> implements SymbolT
         System.out.println("" + bst.rank("Z"));
     }
     
-//    private static void stressTest() {
-//        System.out.println("******************stressTest()******************");
-//        Stopwatch stopwatch = new Stopwatch();
-//        System.out.println("stess test RBT iterator sorted");
-//        System.out.println("=====================================================");
-//        int size = 10000000;
-//        
-//        RedBlackTree<Integer, Integer> redBlackTree = new RedBlackTree<>();
-//        for (int i = 0; i < size; i++) {
-//            redBlackTree.put(i, null);
-//        }
-//        System.out.println(stopwatch.elapsedTime());
-//        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
-//        System.out.println();
-//        
-//        stopwatch = new Stopwatch();
-//        System.out.println("stress test RBT delete");
-//        Random random = new Random();
-//        for (int i = 0; i < size; i++) {
-//            redBlackTree.put(random.nextInt(size * 100), null);
-////            redBlackTree.put(random.nextInt(size), null);
-//            redBlackTree.delete(random.nextInt(size * 100));
-//        }
-//        System.out.println(stopwatch.elapsedTime());
-//        System.out.println("RBT iterator sorted succeed: " + isSorted(redBlackTree));
-//        System.out.println();
-//    }
-    
     // test rank, select
     public static void main(String[] args) {
-//        testBasic();
 //        testFloorCeiling();
+//        testBasic();
 //        testSizeHeight();
 //        testSelectRank();
 //        testBst();
-//        testIterator();
-//        stressTest();
+//        stressTestBst();
+        testIterator();
     }
+    
+    // test word count
+//    public static void main(String[] args) {
+//        int minLength = 8;
+//        SymbolTable<String, Integer> st = new BST<String, Integer>();
+//        In in = new In("data/tale.txt");
+//  
+//        while (!in.isEmpty()) {
+//            String word = in.readString();
+//            if (word.length() < minLength) continue;
+//            if (!st.contains(word)) st.put(word, 1);
+//            else st.put(word, st.get(word) + 1);
+//        }
+//  
+//        String max = "";
+//        st.put(max, 0);
+//        for (String word: st.keys())
+//            if (st.get(word) > st.get(max))
+//                max = word;
+//        System.out.println(max + ": " + st.get(max));
+//    }
 }

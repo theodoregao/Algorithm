@@ -1,33 +1,36 @@
-package collections;
+package collections.impl.stack;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedSteque<Item> implements Steque<Item> {
+import collections.Stack;
+import collections.impl.LinkedNodeIterator;
+import collections.impl.Node;
+
+public class LinkedStack<Item> implements Stack<Item> {
 
     private Node<Item> first;
-    private Node<Item> last;
     private int size = 0;
+    
+    public LinkedStack() {
+        
+    }
+    
+    public LinkedStack(Stack<Item> stack) {
+        Stack<Item> tempStack = new LinkedStack<>();
+        for (Item item: stack) tempStack.push(item);
+        while (!tempStack.isEmpty()) push(tempStack.pop());
+    }
 
     @Override
     public Iterator<Item> iterator() {
-        return new LinkedNodeIterator<>(first);
+        return new LinkedNodeIterator<Item>(first);
     }
 
     @Override
     public void push(Item item) {
         first = new Node<Item>(item, first);
-        if (last == null) last = first;
         size++;
-    }
-
-    @Override
-    public void enqueue(Item item) {
-        if (last == null) push(item);
-        else {
-            last = last.next = new Node<Item>(item, null);
-            size++;
-        }
     }
 
     @Override
@@ -35,7 +38,6 @@ public class LinkedSteque<Item> implements Steque<Item> {
         if (size == 0) throw new NoSuchElementException();
         Item item = first.item;
         first = first.next;
-        if (first == null) last = null;
         size--;
         return item;
     }
@@ -57,14 +59,11 @@ public class LinkedSteque<Item> implements Steque<Item> {
     }
 
     public static void main(String[] args) {
-        Steque<Integer> steque = new LinkedSteque<Integer>();
-        for (int i = 0; i < 10; i++) {
-            if (i % 2 == 0) steque.enqueue(i);
-            else steque.push(i);
-        }
-        for (int i : steque) System.out.println(i);
+        Stack<Integer> stack = new LinkedStack<Integer>();
+        for (int i = 0; i < 10; i++) stack.push(i);
+        for (int i : new LinkedStack<>(stack)) System.out.println(i);
         System.out.println();
-        while (!steque.isEmpty()) System.out.println(steque.pop());
+        while (!stack.isEmpty()) System.out.println(stack.pop());
     }
 
 }

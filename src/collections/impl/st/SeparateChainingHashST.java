@@ -1,6 +1,10 @@
-package collections;
+package collections.impl.st;
 
 import java.util.Iterator;
+
+import collections.Bag;
+import collections.Map;
+import collections.impl.bag.LinkedBag;
 
 public class SeparateChainingHashST<Key, Value> implements Map<Key, Value> {
     

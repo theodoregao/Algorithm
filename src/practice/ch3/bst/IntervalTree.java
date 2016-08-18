@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class IntervalTree {

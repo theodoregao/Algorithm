@@ -3,7 +3,7 @@ package problems.ch2.section5;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _08_Frequency {
     

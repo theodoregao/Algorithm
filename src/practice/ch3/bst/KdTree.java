@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import collections.Bag;
-import collections.LinkedBag;
-import collections.StdRandom;
+import collections.impl.StdRandom;
+import collections.impl.bag.LinkedBag;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdIn;
 

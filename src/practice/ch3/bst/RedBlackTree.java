@@ -3,8 +3,8 @@ package practice.ch3.bst;
 import java.util.ArrayList;
 import java.util.List;
 
-import collections.LinkedQueue;
 import collections.Queue;
+import collections.impl.queue.LinkedQueue;
 
 public class RedBlackTree<Key extends Comparable<Key>, Value> {
     

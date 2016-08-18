@@ -1,53 +1,60 @@
-package collections;
+package collections.impl.queue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class RandomQueue<Item> implements Iterable<Item> {
+import collections.Queue;
+
+public class ResizingArrayQueue<Item> implements Queue<Item> {
 
     private static final int DEFAULT_SIZE = 16;
 
     private Item[] items = (Item[]) new Object[DEFAULT_SIZE];
     private int first = 0;
     private int size = 0;
+    
+    public ResizingArrayQueue() {
+        
+    }
+    
+    public ResizingArrayQueue(Queue<Item> queue) {
+        for (Item item: queue) enqueue(item);
+    }
 
     @Override
     public Iterator<Item> iterator() {
-        return new RandomIterator();
+        return new ArrayIterator();
     }
 
+    @Override
+    public Item peek() {
+        if (size == 0) throw new NoSuchElementException();
+        return items[first];
+    }
+
+    @Override
     public void enqueue(Item item) {
         if (first + size == items.length) resize();
         items[first + size++] = item;
     }
 
+    @Override
     public Item dequeue() {
         if (size == 0) throw new NoSuchElementException();
-        Item item = sample();
+        Item item = items[first];
         items[first] = null;
         first++;
         size--;
         if (size <= items.length / 4 && items.length > DEFAULT_SIZE) resize();
         return item;
     }
-    
-    private Item sample() {
-        return sample(0);
-    }
-    
-    public Item sample(int index) {
-        if (size == 0) throw new NoSuchElementException();
-        int position = StdRandom.uniform(size - index);
-        Item item = items[first + index + position];
-        items[first + index + position] = items[first + index];
-        items[first + index] = item;
-        return item;
-    }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
@@ -61,12 +68,15 @@ public class RandomQueue<Item> implements Iterable<Item> {
     private void resize(int max) {
         Item[] newItems = items;
         if (max != items.length) newItems = (Item[]) new Object[max];
-        for (int i = 0; i < size; i++) newItems[i] = items[first + i];
+        for (int i = 0; i < size; i++) {
+            newItems[i] = items[first + i];
+            items[first + i] = null;
+        }
         first = 0;
         items = newItems;
     }
 
-    private class RandomIterator implements Iterator<Item> {
+    private class ArrayIterator implements Iterator<Item> {
 
         private int index = 0;
 
@@ -77,7 +87,7 @@ public class RandomQueue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            return sample(index++);
+            return items[first + index++];
         }
 
         @Override
@@ -88,23 +98,14 @@ public class RandomQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        RandomQueue<Integer> randomQueue = new RandomQueue<Integer>();
-        for (int i = 0; i < 10; i++) randomQueue.enqueue(i);
-        
-        System.out.println(randomQueue.size);
-        System.out.println();
-        for (int i: randomQueue) System.out.println(i);
+        Queue<Integer> queue = new ResizingArrayQueue<Integer>();
+        for (int i = 0; i < 1000; i++) queue.enqueue(i);
+        for (int i: new ResizingArrayQueue<>(queue)) System.out.println(i);
         
         System.out.println();
-        for (int i = 0; i < 10; i++) System.out.println(randomQueue.sample());
-        
-        System.out.println();
-        while (!randomQueue.isEmpty()) System.out.println(randomQueue.dequeue());
-        
-        System.out.println();
-        randomQueue = new RandomQueue<Integer>();
-        for (int i = 0; i < 10; i++) randomQueue.enqueue(i);
-        while (!randomQueue.isEmpty()) System.out.println(randomQueue.dequeue());
+        for (int i = 0; i < 1000; i++) {
+            if (queue.dequeue() != i) System.out.println("error");
+        }
     }
 
 }

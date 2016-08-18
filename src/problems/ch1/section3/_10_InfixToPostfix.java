@@ -1,7 +1,7 @@
 package problems.ch1.section3;
 
-import collections.LinkedStack;
 import collections.Stack;
+import collections.impl.stack.LinkedStack;
 
 /**
  * 1.3.10 Write a filter InfixToPostfix that converts an arithmetic expression from infix to postfix.

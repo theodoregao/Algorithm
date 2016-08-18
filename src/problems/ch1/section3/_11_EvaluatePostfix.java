@@ -1,7 +1,7 @@
 package problems.ch1.section3;
 
-import collections.LinkedStack;
 import collections.Stack;
+import collections.impl.stack.LinkedStack;
 
 /**
  * 1.3.11 Write a program EvaluatePostfix that takes a postfix expression from standard input, evaluates it, and prints the value. (Piping the output of your program from

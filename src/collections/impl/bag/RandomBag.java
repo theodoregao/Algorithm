@@ -1,7 +1,9 @@
-package collections;
+package collections.impl.bag;
 
 import java.util.Iterator;
-import java.util.Random;
+
+import collections.Bag;
+import collections.impl.StdRandom;
 
 public class RandomBag<Item> implements Bag<Item> {
 

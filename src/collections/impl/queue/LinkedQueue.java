@@ -1,7 +1,11 @@
-package collections;
+package collections.impl.queue;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import collections.Queue;
+import collections.impl.LinkedNodeIterator;
+import collections.impl.Node;
 
 public class LinkedQueue<Item> implements Queue<Item> {
 

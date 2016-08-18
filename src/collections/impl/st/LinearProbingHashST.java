@@ -1,4 +1,8 @@
-package collections;
+package collections.impl.st;
+
+import collections.Bag;
+import collections.Map;
+import collections.impl.bag.LinkedBag;
 
 public class LinearProbingHashST<Key, Value> implements Map<Key, Value> {
     

@@ -1,6 +1,6 @@
 package problems.ch2.section2;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _19_Inversions {
     

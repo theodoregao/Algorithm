@@ -3,8 +3,8 @@ package graph;
 import java.util.HashSet;
 import java.util.Set;
 
-import collections.LinearProbingHashST;
 import collections.Map;
+import collections.impl.st.LinearProbingHashST;
 
 public class GraphDeletable<Key> {
     

@@ -2,7 +2,7 @@ package problems.ch2.section4;
 
 import java.util.Comparator;
 
-import collections.Heap;
+import collections.impl.heap.Heap;
 
 public class _30_DynamicMedianFinding {
     

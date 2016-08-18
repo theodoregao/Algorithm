@@ -1,7 +1,11 @@
-package collections;
+package collections.impl.general;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import collections.Deque;
+import collections.impl.DoubleLinkedNode;
+import collections.impl.DoubleLinkedNodeIterator;
 
 public class LinkedDeque<Item> implements Deque<Item> {
     

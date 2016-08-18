@@ -1,6 +1,8 @@
-package collections;
+package collections.impl.bag;
 
 import java.util.Iterator;
+
+import collections.Bag;
 
 public class ResizingArrayBag<Item> implements Bag<Item> {
 

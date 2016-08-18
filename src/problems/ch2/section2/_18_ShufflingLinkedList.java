@@ -2,7 +2,7 @@ package problems.ch2.section2;
 
 import java.util.Arrays;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class _18_ShufflingLinkedList<Item> {

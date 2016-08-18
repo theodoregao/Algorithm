@@ -1,9 +1,9 @@
 package graph;
 
-import collections.LinkedQueue;
-import collections.LinkedStack;
 import collections.Queue;
 import collections.Stack;
+import collections.impl.queue.LinkedQueue;
+import collections.impl.stack.LinkedStack;
 import edu.princeton.cs.algs4.In;
 
 public class BreadthFirstSearch<Key> {

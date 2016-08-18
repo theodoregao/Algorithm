@@ -2,7 +2,7 @@ package problems.ch2.section5;
 
 import java.util.HashSet;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _02_TwoWordCompound {
     

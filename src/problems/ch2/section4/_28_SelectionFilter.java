@@ -3,8 +3,8 @@ package problems.ch2.section4;
 import java.awt.Color;
 import java.util.Comparator;
 
-import collections.Heap;
-import collections.StdRandom;
+import collections.impl.StdRandom;
+import collections.impl.heap.Heap;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class _28_SelectionFilter {

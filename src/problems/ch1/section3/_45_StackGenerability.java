@@ -1,7 +1,7 @@
 package problems.ch1.section3;
 
-import collections.LinkedStack;
 import collections.Stack;
+import collections.impl.stack.LinkedStack;
 
 public class _45_StackGenerability {
     

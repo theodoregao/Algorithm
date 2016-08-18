@@ -1,7 +1,10 @@
-package collections;
+package collections.impl.general;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import collections.impl.LinkedNodeIterator;
+import collections.impl.Node;
 
 public class GeneralizedQueue<Item> implements Iterable<Item> {
     

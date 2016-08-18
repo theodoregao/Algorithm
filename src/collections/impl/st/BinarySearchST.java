@@ -1,4 +1,8 @@
-package collections;
+package collections.impl.st;
+
+import collections.Queue;
+import collections.SymbolTable;
+import collections.impl.queue.LinkedQueue;
 
 public class BinarySearchST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
     

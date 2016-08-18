@@ -1,6 +1,6 @@
 package problems.ch1.section3;
 
-import collections.GeneralizedQueue;
+import collections.impl.general.GeneralizedQueue;
 import edu.princeton.cs.algs4.StdIn;
 
 public class _40_MoveToFront {

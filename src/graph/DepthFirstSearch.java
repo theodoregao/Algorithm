@@ -3,10 +3,10 @@ package graph;
 import java.util.HashSet;
 import java.util.Set;
 
-import collections.LinearProbingHashST;
-import collections.LinkedStack;
 import collections.Map;
 import collections.Stack;
+import collections.impl.st.LinearProbingHashST;
+import collections.impl.stack.LinkedStack;
 import edu.princeton.cs.algs4.In;
 
 public class DepthFirstSearch<Key> {

@@ -1,4 +1,4 @@
-package collections;
+package collections.impl;
 
 import java.util.Arrays;
 import java.util.Random;

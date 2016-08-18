@@ -1,6 +1,6 @@
 package problems.ch2.section4;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _27_FindTheMinimum {
     

@@ -1,9 +1,9 @@
 package graph;
 
 import collections.Bag;
-import collections.LinearProbingHashST;
-import collections.LinkedBag;
 import collections.Map;
+import collections.impl.bag.LinkedBag;
+import collections.impl.st.LinearProbingHashST;
 
 public class Graph<Key> {
     

@@ -1,6 +1,6 @@
 package problems.ch2.section2;
 
-import collections.StdRandom;
+import collections.impl.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class _17_LinkedListSort<Item extends Comparable> {

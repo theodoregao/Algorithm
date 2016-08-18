@@ -3,7 +3,7 @@ package problems.ch1.section4;
 import java.util.Arrays;
 
 import algorithms.BinarySearch;
-import collections.StdRandom;
+import collections.impl.StdRandom;
 
 public class _11_CountEquals {
     

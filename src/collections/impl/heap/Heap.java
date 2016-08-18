@@ -1,4 +1,4 @@
-package collections;
+package collections.impl.heap;
 
 import java.util.Comparator;
 import java.util.Iterator;

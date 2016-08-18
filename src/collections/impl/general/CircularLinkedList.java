@@ -1,7 +1,10 @@
-package collections;
+package collections.impl.general;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import collections.impl.DoubleLinkedNode;
+import collections.impl.DoubleLinkedNodeIterator;
 
 public class CircularLinkedList<Item> implements Iterable<Item> {
     

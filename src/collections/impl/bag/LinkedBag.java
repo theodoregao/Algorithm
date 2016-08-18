@@ -1,6 +1,10 @@
-package collections;
+package collections.impl.bag;
 
 import java.util.Iterator;
+
+import collections.Bag;
+import collections.impl.LinkedNodeIterator;
+import collections.impl.Node;
 
 public class LinkedBag<Item> implements Bag<Item> {
 

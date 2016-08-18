@@ -1,7 +1,9 @@
-package collections;
+package collections.impl.stack;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import collections.Stack;
 
 public class ResizingArrayStack<Item> implements Stack<Item> {
 

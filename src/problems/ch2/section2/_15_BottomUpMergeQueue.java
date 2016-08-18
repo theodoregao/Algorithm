@@ -1,8 +1,8 @@
 package problems.ch2.section2;
 
-import collections.LinkedQueue;
 import collections.Queue;
-import collections.StdRandom;
+import collections.impl.StdRandom;
+import collections.impl.queue.LinkedQueue;
 import edu.princeton.cs.algs4.Stopwatch;
 
 public class _15_BottomUpMergeQueue<Item extends Comparable> {

@@ -1,7 +1,7 @@
 package problems.ch1.section3;
 
-import collections.LinkedStack;
 import collections.Stack;
+import collections.impl.stack.LinkedStack;
 
 /**
  * 1.3.9 Write a program that takes from standard input an expression without left parentheses and prints the equivalent infix expression with the parentheses inserted. For
