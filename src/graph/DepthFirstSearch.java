@@ -18,7 +18,7 @@ public class DepthFirstSearch<Key> {
     
     public DepthFirstSearch(GraphDeletable<Key> graph, Key source) {
         this.source = source;
-        this.graph = graph;
+        this.graph = new GraphDeletable<>(graph);
         marked = new HashSet<>();
         edgeFrom = new LinearProbingHashST<>();
         dfs(source);

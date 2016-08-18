@@ -15,6 +15,17 @@ public class GraphDeletable<Key> {
         vertex = new LinearProbingHashST<>();
     }
     
+    public GraphDeletable(GraphDeletable<Key> graph) {
+        vertex = new LinearProbingHashST<>();
+        for (Key v: graph.keys())
+            for (Key w: graph.adj(v))
+                addEdge(v, w);
+    }
+    
+    public GraphDeletable<Key> copy(GraphDeletable<Key> graph) {
+        return new GraphDeletable<>(this);
+    }
+    
     public int size() {
         return vertex.size();
     }

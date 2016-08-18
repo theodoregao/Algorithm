@@ -13,16 +13,18 @@ import edu.princeton.cs.algs4.In;
 
 public class EulerCircuit<Key> {
     
+    private GraphDeletable<Key> graph;
     private Queue<Key> eulerCircuit;
     private Stack<Key> stack;
     private Set<Key> marked;
     
     public EulerCircuit(GraphDeletable<Key> graph) {
+        this.graph = new GraphDeletable<>(graph);
         eulerCircuit = new LinkedQueue<>();
         stack = new LinkedStack<>();
         marked = new HashSet<>();
         
-        for (Key v: graph.keys()) if (!marked.contains(v) && eulerCircuit.size() == 0) dfs(graph, v);
+        for (Key v: graph.keys()) if (!marked.contains(v) && eulerCircuit.size() == 0) dfs(v);
     }
     
     public boolean hasEulerCircuit() {
@@ -41,7 +43,7 @@ public class EulerCircuit<Key> {
         return eulerCircuit;
     }
     
-    private void dfs(GraphDeletable<Key> graph, Key v) {
+    private void dfs(Key v) {
         marked.add(v);
         stack.push(v);
         
@@ -50,7 +52,7 @@ public class EulerCircuit<Key> {
         for (Key w: graph.adj(v)) adj.add(w);
         for (Key w: adj) if (graph.hasEdge(v, w)) {
             graph.delete(v, w);
-            dfs(graph, w);
+            dfs(w);
         }
         
         eulerCircuit.enqueue(stack.pop());
