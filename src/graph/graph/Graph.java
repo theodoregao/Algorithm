@@ -1,4 +1,4 @@
-package graph;
+package graph.graph;
 
 import collections.Bag;
 import collections.Map;
