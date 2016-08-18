@@ -1,42 +1,47 @@
 package graph.graph;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import collections.Map;
 import collections.Queue;
 import collections.Stack;
 import collections.impl.queue.LinkedQueue;
+import collections.impl.st.SeparateChainingHashST;
 import collections.impl.stack.LinkedStack;
 import edu.princeton.cs.algs4.In;
 
 public class BreadthFirstSearch<Key> {
     
     private Graph<Key> graph;
-    private boolean[] marked;
+    private Set<Key> marked;
+    private Map<Key, Key> edgeFrom;
     private Key source;
-    private Key[] edgeFrom;
     
     public BreadthFirstSearch(Graph<Key> graph, Key source) {
         this.source = source;
-        this.graph = graph;
-        marked = new boolean[graph.size()];
-        edgeFrom = (Key[]) new Object[graph.size()];
+        this.graph = graph.copy();
+        marked = new HashSet<>();
+        edgeFrom = new SeparateChainingHashST<>();
         bfs(source);
     }
     
     private void bfs(Key v) {
-        marked[graph.getIndex(v)] = true;
+        marked.add(v);
         Queue<Key> queue = new LinkedQueue<Key>();
         queue.enqueue(v);
         while (!queue.isEmpty()) {
             Key vertex = queue.dequeue();
-            for (Key w: graph.adj(vertex)) if (!marked[graph.getIndex(w)]) {
-                marked[graph.getIndex(w)] = true;
-                edgeFrom[graph.getIndex(w)] = vertex;
+            for (Key w: graph.adj(vertex)) if (!marked.contains(w)) {
+                marked.add(w);
+                edgeFrom.put(w, vertex);
                 queue.enqueue(w);
             }
         }
     }
     
     private boolean marked(Key v) {
-        return marked[graph.getIndex(v)];
+        return marked.contains(v);
     }
     
     public boolean hasPathTo(Key v) {
@@ -46,7 +51,7 @@ public class BreadthFirstSearch<Key> {
     public Iterable<Key> pathTo(Key v) {
         if (!hasPathTo(v)) return null;
         Stack<Key> path = new LinkedStack<Key>();
-        for (Key x = v; !source.equals(x); x = edgeFrom[graph.getIndex(x)]) path.push(x);
+        for (Key x = v; !source.equals(x); x = edgeFrom.get(x)) path.push(x);
         path.push(source);
         return path;
     }
@@ -54,7 +59,8 @@ public class BreadthFirstSearch<Key> {
     public static void main(String[] args) {
         In in = new In("data/tinyG.txt");
         
-        Graph<Integer> graph = new Graph<>(in.readInt());
+        Graph<Integer> graph = new Graph<>();
+        in.readInt();
         in.readInt();
         
         while (in.hasNextLine()) graph.addEdge(in.readInt(), in.readInt());
@@ -62,7 +68,7 @@ public class BreadthFirstSearch<Key> {
         
         BreadthFirstSearch<Integer> bfs = new BreadthFirstSearch<>(graph, 0);
         
-        for (Integer v: graph.keys()) {
+        for (Integer v: graph.vertex()) {
             if (bfs.hasPathTo(v)) {
                 System.out.println("path to " + v);
                 for (Integer w: bfs.pathTo(v)) System.out.print(w + " ");

@@ -1,22 +1,25 @@
 package graph.graph;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import edu.princeton.cs.algs4.In;
 
 public class Cycle<Key> {
 
-    private boolean[] marked;
+    private Set<Key> marked;
     private boolean hasCycle;
     
     public Cycle(Graph<Key> graph) {
-        marked = new boolean[graph.size()];
-        for (Key v: graph.keys()) if (!marked[graph.getIndex(v)] && !hasCycle) dfs(graph, v, v);
+        marked = new HashSet<>();
+        for (Key v: graph.vertex()) if (!marked.contains(v) && !hasCycle) dfs(graph, v, v);
     }
     
     private void dfs(Graph<Key> graph, Key v, Key source) {
         if (hasCycle) return;
-        marked[graph.getIndex(v)] = true;
+        marked.add(v);
         for (Key w: graph.adj(v))
-            if (!marked[graph.getIndex(w)]) dfs(graph, w, v);
+            if (!marked.contains(w)) dfs(graph, w, v);
             else if (!source.equals(w)) hasCycle = true;
     }
     
@@ -27,7 +30,8 @@ public class Cycle<Key> {
     public static void main(String[] args) {
         In in = new In("data/tinyG.txt");
         
-        Graph<Integer> graph = new Graph<>(in.readInt());
+        Graph<Integer> graph = new Graph<>();
+        in.readInt();
         in.readInt();
         
         while (in.hasNextLine()) graph.addEdge(in.readInt(), in.readInt());

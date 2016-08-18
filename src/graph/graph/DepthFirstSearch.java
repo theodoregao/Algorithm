@@ -11,14 +11,14 @@ import edu.princeton.cs.algs4.In;
 
 public class DepthFirstSearch<Key> {
     
-    private GraphDeletable<Key> graph;
+    private Graph<Key> graph;
     private Set<Key> marked;
     private Map<Key, Key> edgeFrom;
     private Key source;
     
-    public DepthFirstSearch(GraphDeletable<Key> graph, Key source) {
+    public DepthFirstSearch(Graph<Key> graph, Key source) {
         this.source = source;
-        this.graph = new GraphDeletable<>(graph);
+        this.graph = graph.copy();
         marked = new HashSet<>();
         edgeFrom = new LinearProbingHashST<>();
         dfs(source);
@@ -51,7 +51,7 @@ public class DepthFirstSearch<Key> {
     public static void main(String[] args) {
         In in = new In("data/tinyG.txt");
         
-        GraphDeletable<Integer> graph = new GraphDeletable<>();
+        Graph<Integer> graph = new Graph<>();
         in.readInt();
         in.readInt();
         
@@ -60,7 +60,7 @@ public class DepthFirstSearch<Key> {
         
         DepthFirstSearch<Integer> dfs = new DepthFirstSearch<>(graph, 0);
         
-        for (Integer v: graph.keys()) {
+        for (Integer v: graph.vertex()) {
             if (dfs.hasPathTo(v)) {
                 System.out.println("path to " + v);
                 for (Integer w: dfs.pathTo(v)) System.out.print(w + " ");
