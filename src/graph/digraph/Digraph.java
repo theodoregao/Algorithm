@@ -100,7 +100,6 @@ public class Digraph<Key> {
         scanner.close();
         System.out.println(digraph);
         System.out.println(digraph.reverse());
-        
     }
     
 }
