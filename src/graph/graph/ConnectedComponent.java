@@ -9,20 +9,18 @@ import edu.princeton.cs.algs4.In;
 
 public class ConnectedComponent<Key> {
 
-    private Graph<Key> graph;
     private Set<Key> marked;
     private Map<Key, Key> ids;
     private Map<Key, Set<Key>> ccs;
     
     public ConnectedComponent(Graph<Key> graph) {
-        this.graph = graph.copy();
         marked = new HashSet<>();
         ids = new SeparateChainingHashST<>();
         ccs = new SeparateChainingHashST<>();
         
         for (Key v: graph.vertex()) if (!marked.contains(v)) {
             ccs.put(v, new HashSet<Key>());
-            dfs(v, v);
+            dfs(graph, v, v);
         }
     }
     
@@ -39,14 +37,14 @@ public class ConnectedComponent<Key> {
     }
     
     public boolean connected(Key v, Key w) {
-        return graph.hasVertex(v) && graph.hasVertex(w) && id(v).equals(id(w));
+        return id(v) != null && id(v).equals(id(w));
     }
 
-    private void dfs(Key v, Key u) {
+    private void dfs(Graph<Key> graph, Key v, Key u) {
         marked.add(v);
         ccs.get(u).add(v);
         ids.put(v, u);
-        for (Key w: graph.adj(v)) if (!marked.contains(w)) dfs(w, u);
+        for (Key w: graph.adj(v)) if (!marked.contains(w)) dfs(graph, w, u);
     }
     
     public static void main(String[] args) {

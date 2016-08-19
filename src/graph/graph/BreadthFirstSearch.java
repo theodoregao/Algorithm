@@ -13,20 +13,18 @@ import edu.princeton.cs.algs4.In;
 
 public class BreadthFirstSearch<Key> {
     
-    private Graph<Key> graph;
     private Set<Key> marked;
     private Map<Key, Key> edgeFrom;
     private Key source;
     
     public BreadthFirstSearch(Graph<Key> graph, Key source) {
         this.source = source;
-        this.graph = graph.copy();
         marked = new HashSet<>();
         edgeFrom = new SeparateChainingHashST<>();
-        bfs(source);
+        bfs(graph, source);
     }
     
-    private void bfs(Key v) {
+    private void bfs(Graph<Key> graph, Key v) {
         marked.add(v);
         Queue<Key> queue = new LinkedQueue<Key>();
         queue.enqueue(v);

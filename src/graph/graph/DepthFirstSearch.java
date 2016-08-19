@@ -11,24 +11,22 @@ import edu.princeton.cs.algs4.In;
 
 public class DepthFirstSearch<Key> {
     
-    private Graph<Key> graph;
     private Set<Key> marked;
     private Map<Key, Key> edgeFrom;
     private Key source;
     
     public DepthFirstSearch(Graph<Key> graph, Key source) {
         this.source = source;
-        this.graph = graph.copy();
         marked = new HashSet<>();
         edgeFrom = new LinearProbingHashST<>();
-        dfs(source);
+        dfs(graph, source);
     }
     
-    private void dfs(Key v) {
+    private void dfs(Graph<Key> graph, Key v) {
         marked.add(v);
         for (Key w: graph.adj(v)) if (!marked.contains(w)) {
             edgeFrom.put(w, v);;
-            dfs(w);
+            dfs(graph, w);
         }
     }
     
