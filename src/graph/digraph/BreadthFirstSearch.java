@@ -8,43 +8,41 @@ import java.util.Set;
 
 import collections.Bag;
 import collections.Map;
+import collections.Queue;
 import collections.Stack;
 import collections.impl.bag.LinkedBag;
-import collections.impl.st.SeparateChainingHashST;
+import collections.impl.queue.LinkedQueue;
+import collections.impl.st.LinearProbingHashST;
 import collections.impl.stack.LinkedStack;
 
-public class DepthFirstSearch<Key> {
+public class BreadthFirstSearch<Key> {
     
     private Set<Key> marked;
     private Map<Key, Key> edgeFrom;
     private Set<Key> sources;
     
-    public DepthFirstSearch(Digraph<Key> digraph, Key source) {
+    public BreadthFirstSearch(Digraph<Key> digraph, Key source) {
         Bag<Key> sources = new LinkedBag<>();
         sources.add(source);
         init(digraph, sources);
     }
     
-    public DepthFirstSearch(Digraph<Key> digraph, Key[] sources) {
+    public BreadthFirstSearch(Digraph<Key> digraph, Bag<Key> sources) {
+        init(digraph, sources);
+    }
+    
+    public BreadthFirstSearch(Digraph<Key> digraph, Key[] sources) {
         Bag<Key> bag = new LinkedBag<>();
         for (Key v: sources) bag.add(v);
         init(digraph, bag);
     }
-
-    public DepthFirstSearch(Digraph<Key> digraph, Bag<Key> sources) {
-        init(digraph, sources);
-    }
     
     private void init(Digraph<Key> digraph, Bag<Key> sources) {
-        marked = new HashSet<Key>();
-        edgeFrom = new SeparateChainingHashST<>();
+        marked = new HashSet<>();
+        edgeFrom = new LinearProbingHashST<>();
         this.sources = new HashSet<>();
-        
-        for (Key v: sources) {
-            this.sources.add(v);
-            edgeFrom.put(v, v);
-            if (!marked.contains(v)) dfs(digraph, v);
-        }
+        for (Key v: sources) this.sources.add(v);
+        bfs(digraph);
     }
     
     private boolean marked(Key v) {
@@ -63,12 +61,20 @@ public class DepthFirstSearch<Key> {
         return path;
     }
     
-    private void dfs(Digraph<Key> digraph, Key v) {
-        marked.add(v);
+    private void bfs(Digraph<Key> digraph) {
+        Queue<Key> queue = new LinkedQueue<>();
+        for (Key v: sources) {
+            marked.add(v);
+            queue.enqueue(v);
+        }
         
-        for (Key w: digraph.adj(v)) if (!marked.contains(w)) {
-            edgeFrom.put(w, v);
-            dfs(digraph, w);
+        while (!queue.isEmpty()) {
+            Key v = queue.dequeue();
+            for (Key w: digraph.adj(v)) if (!marked.contains(w)) {
+                marked.add(w);
+                queue.enqueue(w);
+                edgeFrom.put(w, v);
+            }
         }
     }
     
@@ -81,10 +87,10 @@ public class DepthFirstSearch<Key> {
         scanner.close();
         System.out.println(digraph);
         
-        DepthFirstSearch<Integer> dfs = new DepthFirstSearch<>(digraph, new Integer[] {0, 9});
-        for (Integer v: digraph.vertex()) if (dfs.hasPathTo(v)) {
+        BreadthFirstSearch<Integer> bfs = new BreadthFirstSearch<>(digraph, new Integer[] {0, 7, 9});
+        for (Integer v: digraph.vertex()) if (bfs.hasPathTo(v)) {
             System.out.print(v + ": ");
-            for (Integer w: dfs.pathTo(v)) System.out.print(w + " ");
+            for (Integer w: bfs.pathTo(v)) System.out.print(w + " ");
             System.out.println();
         }
         

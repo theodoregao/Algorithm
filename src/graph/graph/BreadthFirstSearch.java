@@ -49,7 +49,7 @@ public class BreadthFirstSearch<Key> {
     public Iterable<Key> pathTo(Key v) {
         if (!hasPathTo(v)) return null;
         Stack<Key> path = new LinkedStack<Key>();
-        for (Key x = v; !source.equals(x); x = edgeFrom.get(x)) path.push(x);
+        for ( ; !source.equals(v); v = edgeFrom.get(v)) path.push(v);
         path.push(source);
         return path;
     }

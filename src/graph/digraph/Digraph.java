@@ -1,11 +1,13 @@
 package graph.digraph;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 import collections.Map;
 import collections.impl.st.LinearProbingHashST;
-import edu.princeton.cs.algs4.In;
 
 public class Digraph<Key> {
     
@@ -89,14 +91,13 @@ public class Digraph<Key> {
         return stringBuilder.toString();
     }
     
-    public static void main(String[] args) {
-        In in = new In("data/tinyG.txt");
-        
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new FileInputStream("data/tinyDG.txt"));
         Digraph<Integer> digraph = new Digraph<>();
-        in.readInt();
-        in.readInt();
-        
-        while (in.hasNextLine()) digraph.addEdge(in.readInt(), in.readInt());
+        scanner.nextInt();
+        scanner.nextInt();
+        while (scanner.hasNextInt()) digraph.addEdge(scanner.nextInt(), scanner.nextInt());
+        scanner.close();
         System.out.println(digraph);
         System.out.println(digraph.reverse());
         
