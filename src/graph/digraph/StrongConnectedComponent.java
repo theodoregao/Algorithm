@@ -22,7 +22,6 @@ public class StrongConnectedComponent<Key> {
         sccs = new SeparateChainingHashST<>();
         
         for (Key v: new DfsOrder<>(digraph.reverse()).reversePost()) {
-            System.out.println(v);
             if (!marked.contains(v)) {
                 sccs.put(v, new HashSet<Key>());
                 dfs(digraph, v, v);
