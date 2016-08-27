@@ -1,4 +1,4 @@
-package algorithms;
+package collections.impl.general;
 
 import java.io.IOException;
 
@@ -33,7 +33,7 @@ public class UnionFind {
         else return ids[p] = find(ids[p]);
     }
     
-    boolean connected(int p, int q) {
+    public boolean connected(int p, int q) {
         return find(p) == find(q);
     }
     

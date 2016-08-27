@@ -47,8 +47,11 @@ public class IndexHeap<Item> implements Iterable<Item> {
     
     public void delete(Item item) {
         int pos = index.get(item);
-        swap(pos, size--);
+        swap(pos, size);
+        items[size--] = null;
+        index.delete(item);
         sink(pos);
+        if (size <= items.length / 4 && items.length > DEFAULT_SIZE) resize(items.length / 2);
     }
     
     public Item deleteTop() {

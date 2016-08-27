@@ -8,19 +8,24 @@ import java.util.Scanner;
 import java.util.Set;
 
 import collections.Bag;
+import collections.Map;
 import collections.impl.bag.LinkedBag;
-import collections.impl.heap.Heap;
+import collections.impl.heap.IndexHeap;
+import collections.impl.st.LinearProbingHashST;
 
-public class PrimMstLazy<Key> {
+// Not working yet
+public class PrimMst<Key> {
     
     private Set<Key> marked;
     private Bag<Edge<Key>> mst;
-    private Heap<Edge<Key>> pq;
+    private Map<Key, Edge<Key>> candidates;
+    private IndexHeap<Edge<Key>> pq;
     
-    public PrimMstLazy(EdgeWeightedGraph<Key> graph) {
+    public PrimMst(EdgeWeightedGraph<Key> graph) {
         marked = new HashSet<>();
         mst = new LinkedBag<>();
-        pq = new Heap<Edge<Key>>(new Comparator<Edge<Key>>() {
+        candidates = new LinearProbingHashST<>();
+        pq = new IndexHeap<Edge<Key>>(new Comparator<Edge<Key>>() {
 
             @Override
             public int compare(Edge<Key> o1, Edge<Key> o2) {
@@ -55,7 +60,20 @@ public class PrimMstLazy<Key> {
     
     private void visit(EdgeWeightedGraph<Key> graph, Key v) {
         marked.add(v);
-        for (Edge<Key> e: graph.adj(v)) if (!marked.contains(e.other(v))) pq.insert(e);
+        for (Edge<Key> e: graph.adj(v)) {
+            Key w = e.other(v);
+            if (!marked.contains(w)) {
+                if (!candidates.contains(w)) {
+                    candidates.put(w, e);
+                    pq.insert(e);
+                }
+                else if (candidates.get(w).compareTo(e) > 0) {
+                    pq.delete(candidates.get(w));
+                    candidates.put(w, e);
+                    pq.insert(e);
+                }
+            }
+        }
     }
     
     public static void main(String[] args) throws FileNotFoundException {
@@ -66,9 +84,9 @@ public class PrimMstLazy<Key> {
         while (scanner.hasNextInt()) graph.addEdge(new Edge<Integer>(scanner.nextInt(), scanner.nextInt(), scanner.nextDouble()));
         scanner.close();
         System.out.println(graph.edgeCount());
-
+        
         long timestamp = System.currentTimeMillis();
-        PrimMstLazy<Integer> mst = new PrimMstLazy<>(graph);
+        PrimMst<Integer> mst = new PrimMst<>(graph);
         System.out.println(mst.weight());
         int edgeCount = 0;
         for (Edge<Integer> edge: mst.edges()) edgeCount++;
