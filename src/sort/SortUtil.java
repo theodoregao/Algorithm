@@ -28,6 +28,18 @@ public class SortUtil {
         return sb.toString();
     }
     
+    public static void shuffle(int[] items) {
+        Random random = new Random();
+        for (int i = 0; i < items.length; i++)
+            SortUtil.swap(items, i, i + random.nextInt(items.length - i));
+    }
+    
+    public static void shuffle(String[] strings) {
+        Random random = new Random();
+        for (int i = 0; i < strings.length; i++)
+            SortUtil.swap(strings, i, i + random.nextInt(strings.length - i));
+    }
+    
     public static void swap(int[] items, int i, int j) {
         int temp = items[i];
         items[i] = items[j];
@@ -48,10 +60,7 @@ public class SortUtil {
     
     public static boolean isSorted(String[] strings) {
         for (int i = 1; i < strings.length; i++)
-            if (strings[i - 1].compareTo(strings[i]) > 0) {
-                System.out.println(strings[i - 1] + " : " + strings[i]);
-                return false;
-            }
+            if (strings[i - 1].compareTo(strings[i]) > 0) return false;
         return true;
     }
 

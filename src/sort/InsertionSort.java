@@ -1,7 +1,5 @@
 package sort;
 
-import java.util.Random;
-
 public class InsertionSort {
     
     public static void sort(int[] items) {

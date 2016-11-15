@@ -1,7 +1,5 @@
 package sort;
 
-import java.util.Random;
-
 public class QuickSortString {
     
     private static int charAt(String s, int d) {
@@ -9,7 +7,7 @@ public class QuickSortString {
     }
     
     public static void sort(String[] strings) {
-        shuffle(strings);
+        SortUtil.shuffle(strings);
         sortInternal(strings, 0, strings.length - 1, 0);
     }
     
@@ -27,12 +25,6 @@ public class QuickSortString {
         sortInternal(strings, lo, lt - 1, d);
         if (v >= 0) sortInternal(strings, lt, gt, d + 1);
         sortInternal(strings, gt + 1, hi, d);
-    }
-    
-    private static void shuffle(String[] strings) {
-        Random random = new Random();
-        for (int i = 0; i < strings.length; i++)
-            SortUtil.swap(strings, i, i + random.nextInt(strings.length - i));
     }
     
     public static void main(String[] args) {
