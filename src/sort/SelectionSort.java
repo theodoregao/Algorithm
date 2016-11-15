@@ -14,10 +14,7 @@ public class SelectionSort {
     }
     
     public static void main(String[] args) {
-        int size = 10000;
-        int[] items = new int[size];
-        Random random = new Random();
-        for (int i = 0; i < size; i++) items[i] = random.nextInt();
+        int[] items = SortUtil.randomInts(10000);
         sort(items);
         System.out.println(SortUtil.isSorted(items));
     }

@@ -39,10 +39,7 @@ public class MergeSort {
     }
     
     public static void main(String[] args) {
-        int size = 99999999;
-        int[] items = new int[size];
-        Random random = new Random();
-        for (int i = 0; i < size; i++) items[i] = random.nextInt();
+        int[] items = SortUtil.randomInts(9999999);
         sort(items);
         System.out.println(SortUtil.isSorted(items));
     }
