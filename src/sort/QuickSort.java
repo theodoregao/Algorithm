@@ -1,11 +1,9 @@
 package sort;
 
-import java.util.Random;
-
 public class QuickSort {
     
     public static void sort(int items[]) {
-        shuffle(items);
+        SortUtil.shuffle(items);
         sortInternal(items, 0, items.length - 1);
     }
     
@@ -28,14 +26,8 @@ public class QuickSort {
         return j;
     }
     
-    private static void shuffle(int[] items) {
-        Random random = new Random();
-        for (int i = 0; i < items.length; i++)
-            SortUtil.swap(items, i, i + random.nextInt(items.length - i));
-    }
-    
     public static void threeWaySort(int[] items) {
-        shuffle(items);
+        SortUtil.shuffle(items);
         threeWaySortInternal(items, 0, items.length - 1);
     }
     

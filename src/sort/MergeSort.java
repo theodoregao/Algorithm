@@ -1,7 +1,5 @@
 package sort;
 
-import java.util.Random;
-
 public class MergeSort {
     
     private static int[] aux;

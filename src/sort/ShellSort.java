@@ -1,7 +1,5 @@
 package sort;
 
-import java.util.Random;
-
 public class ShellSort {
     
     public static void sort(int[] items) {
