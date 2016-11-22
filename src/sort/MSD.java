@@ -32,7 +32,7 @@ public class MSD {
     
     private static void insertionSort(String[] strings, int lo, int hi) {
         for (int i = lo; i <= hi; i++) {
-            for (int j = i; j >= 1 && strings[j - 1].compareTo(strings[j]) > 0; j--)
+            for (int j = i; j > lo && strings[j - 1].compareTo(strings[j]) > 0; j--)
                 SortUtil.swap(strings, j - 1, j);
         }
     }
