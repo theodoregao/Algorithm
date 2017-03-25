@@ -1,4 +1,8 @@
 package collections.impl.general;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Trie {
     
     private Node root;
@@ -24,21 +28,36 @@ public class Trie {
         return root.search(prefix.toCharArray(), 0) != null;
     }
     
+//    private static class Node {
+//        Node[] next = new Node[256];
+//        boolean terminate;
+//        public void insert(char[] str, int index) {
+//            if (str.length == index) {
+//                terminate = true;
+//                return;
+//            }
+//            if (next[str[index]] == null) next[str[index]] = new Node();
+//            next[str[index]].insert(str, index + 1);
+//        }
+//        public Boolean search(char[] str, int index) {
+//            if (str.length == index) return terminate;
+//            if (next[str[index]] == null) return null;
+//            return next[str[index]].search(str, index + 1);
+//        }
+//    }
+    
     private static class Node {
-        Node[] next = new Node[256];
+        Map<Character, Node> next = new HashMap<>();
         boolean terminate;
         public void insert(char[] str, int index) {
-            if (str.length == index) {
-                terminate = true;
-                return;
-            }
-            if (next[str[index]] == null) next[str[index]] = new Node();
-            next[str[index]].insert(str, index + 1);
+            if (str.length == index) { terminate = true; return; }
+            if (!next.containsKey(str[index])) next.put(str[index], new Node());
+            next.get(str[index]).insert(str, index + 1);
         }
         public Boolean search(char[] str, int index) {
             if (str.length == index) return terminate;
-            if (next[str[index]] == null) return null;
-            return next[str[index]].search(str, index + 1);
+            if (!next.containsKey(str[index])) return null;
+            return next.get(str[index]).search(str, index + 1);
         }
     }
     
