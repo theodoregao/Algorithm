@@ -18,14 +18,20 @@ public class UnionFind {
     }
     
     public void union(int p, int q) {
-        int i = find(p);
-        int j = find(q);
-        if (i == j) return;
-        if (sizes[i] < sizes[j]) { ids[i] = j; sizes[j] += sizes[i]; }
-        else { ids[j] = i; sizes[i] += sizes[j]; }
-//        if (i < j) ids[i] = j;
-//        else ids[j] = i;
+        // simple version of union, probabaly we don't need count and size for this version.
+        if (find(q) == find(p)) return;
+        ids[find(q)] = find(p);
         count--;
+        
+        // complete version of union with weighted union.
+//        int i = find(p);
+//        int j = find(q);
+//        if (i == j) return;
+//        if (sizes[i] < sizes[j]) { ids[i] = j; sizes[j] += sizes[i]; }
+//        else { ids[j] = i; sizes[i] += sizes[j]; }
+////        if (i < j) ids[i] = j;
+////        else ids[j] = i;
+//        count--;
     }
     
     public int find(int p) {
@@ -54,6 +60,6 @@ public class UnionFind {
             if (unionFind.count == 1) break;
         }
         System.out.println(unionFind.count() + " components " + k);
-//        for (int i = 0; i < 1000; i++) System.out.println(unionFind.find(i));
+        for (int i = 0; i < 1000; i++) System.out.println(unionFind.find(i));
     }
 }
