@@ -3,19 +3,23 @@ package collections.impl.general;
 public class SegmentTree {
     
     private Node root;
+    private Node[] items;
     
     public SegmentTree(int[] items) {
+        this.items = new Node[items.length];
         root = build(items, 0, items.length - 1);
     }
     
     private Node build(int[] items, int lo, int hi) {
-        if (lo == hi) return new Node(new Segment(lo, hi), items[lo]);
+        if (lo == hi) return this.items[lo] = new Node(new Segment(lo, hi), items[lo]);
         int mid = (lo + hi) >> 1;
         Node left = build(items, lo, mid);
         Node right = build(items, mid + 1, hi);
         Node node = new Node(new Segment(lo, hi), Math.max(left.value, right.value));
         node.left = left;
         node.right = right;
+        node.left.parent = node;
+        node.right.parent = node;
         return node;
     }
     
@@ -38,28 +42,15 @@ public class SegmentTree {
         }
     }
     
-    public void update(Segment segment, int val) {
-        update(root, segment, val);
-    }
-    
-    private void update(Node node, Segment segment, int val) {
-        if (node == null) return;
-        switch (segment.intersect(node.segment)) {
-        case FULL:
-        case PARTIAL:
-            node.value = val;
-            update(node.left, segment, val);
-            update(node.right, segment, val);
-            break;
-            
-        case NONE:
-        default:
-            return;
-        }
+    public void update(int index, int val) {
+        Node node = items[index];
+        node.value = val;
+        while ((node = node.parent) != null) node.value = Math.max(node.left.value, node.right.value);
     }
 
     static class Node {
         Segment segment;
+        Node parent;
         Node left;
         Node right;
         int value;
@@ -87,7 +78,7 @@ public class SegmentTree {
     public static void main(String[] args) {
         SegmentTree st = new SegmentTree(new int[] {-1,3,5,7,4,0,2,5});
         System.out.println(st.getMax(new Segment(4, 6)));
-        st.update(new Segment(5, 5), 10);
+        st.update(5, 10);
         System.out.println(st.getMax(new Segment(1, 7)));
         System.out.println(st.getMax(new Segment(6, 7)));
     }
