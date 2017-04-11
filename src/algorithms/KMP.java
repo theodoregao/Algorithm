@@ -10,9 +10,13 @@ public class KMP {
         int M = pattern.length();
         int R = 256;
         dfa = new int[R][M];
+        // first column
         dfa[pattern.charAt(0)][0] = 1;
+        // use x to track previous status
         for (int x = 0, j = 1; j < M; j++) {
+            // use previous status x to fill next incorrect cells
             for (int c = 0; c < R; c++) dfa[c][j] = dfa[c][x];
+            // fill next correct cell
             dfa[pattern.charAt(j)][j] = j + 1;
             x = dfa[pattern.charAt(j)][x];
         }
