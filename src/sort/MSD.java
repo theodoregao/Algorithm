@@ -6,13 +6,10 @@ public class MSD {
     private static final int MIN_SORT_SIZE = 15;
     private static String[] aux;
     
-    private static int charAt(String s, int d) {
-        return d < s.length() ? s.charAt(d) : -1;
-    }
-    
     public static void sort(String[] strings) {
         aux = new String[strings.length];
         sortInternal(strings, 0, strings.length - 1, 0);
+        aux = null;
     }
     
     private static void sortInternal(String[] strings, int lo, int hi, int d) {
@@ -35,6 +32,10 @@ public class MSD {
             for (int j = i; j > lo && strings[j - 1].compareTo(strings[j]) > 0; j--)
                 SortUtil.swap(strings, j - 1, j);
         }
+    }
+    
+    private static int charAt(String s, int d) {
+        return d < s.length() ? s.charAt(d) : -1;
     }
     
     public static void main(String[] args) {
