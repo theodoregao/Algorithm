@@ -4,6 +4,18 @@ import java.io.IOException;
 
 import collections.impl.StdRandom;
 
+/*
+ * 并查集一般用于
+ * 对动态连通性的判断，
+ * 主要应用于判断两个元素是否在同一个集合，p200, p323, p130, p305
+ * 两个点是否连通，
+ * 变量名等同性，p737, p721
+ * 以及间接好友的判断，p574
+ * 判断图是否连通，
+ * 或是否有环，p684, p261
+ * 或配合其他算法如最小生成树Kruskal，
+ * 与DP共同使用等。
+ */
 public class UnionFind {
     
     private int count;
