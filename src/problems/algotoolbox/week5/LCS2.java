@@ -1,4 +1,4 @@
-package problems.algotoolbox.week4;
+package problems.algotoolbox.week5;
 import java.util.*;
 
 public class LCS2 {
