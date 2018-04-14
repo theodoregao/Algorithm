@@ -98,7 +98,7 @@ public class Graph {
         }
         
         public boolean hasCycle() { return cycle != null; }
-        public Iterable<Integer> cycle() { return cycle; }
+        public Stack<Integer> cycle() { return cycle; }
         public boolean isDag() { return cycle == null; }
     }
     
@@ -122,7 +122,7 @@ public class Graph {
             marked = new HashSet<>();
             ids = new int[digraph.size()];
             
-            DfsOrder dfsOrder = new DfsOrder(digraph);
+            DfsOrder dfsOrder = new DfsOrder(digraph.reverse());
             for (int p: dfsOrder.reversePost()) if (!marked.contains(p)) {
                 System.out.println("->" + p);
                 dfs(digraph, p);

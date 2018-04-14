@@ -37,7 +37,7 @@ public class DfsOrder<Key> {
     
     public Iterable<Key> pre() { return pre; }
     public Iterable<Key> post() { return post; }
-    public Iterable<Key> reversePost() { return reversePost; }
+    public Stack<Key> reversePost() { return reversePost; }
     
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(new FileInputStream("data/tinyDG.txt"));
