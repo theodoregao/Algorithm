@@ -15,17 +15,17 @@ public class Graph {
         
         public Digraph reverse() {
             Digraph digraph = new Digraph();
-            for (int p: vertex()) for (int q: adj(p)) digraph.addEdge(q, p);
+            for (int v: vertex()) for (int u: adj(v)) digraph.addEdge(u, v);
             return digraph;
         }
         
-        public void addEdge(int p, int q) {
-            if (!edges.containsKey(p)) edges.put(p, new HashSet<Integer>());
-            if (!edges.containsKey(q)) edges.put(q, new HashSet<Integer>());
-            edges.get(p).add(q);
+        public void addEdge(int v, int u) {
+            if (!edges.containsKey(v)) edges.put(v, new HashSet<Integer>());
+            if (!edges.containsKey(u)) edges.put(u, new HashSet<Integer>());
+            edges.get(v).add(u);
         }
         
-        public Iterable<Integer> adj(int p) { return edges.get(p); }
+        public Iterable<Integer> adj(int v) { return edges.get(v); }
         public Iterable<Integer> vertex() { return edges.keySet(); }
         public int size() { return edges.keySet().size(); }
         
@@ -33,10 +33,10 @@ public class Graph {
         public String toString() {
             StringBuilder sb = new StringBuilder(Digraph.class.getSimpleName());
             sb.append("{");
-            for (int p: vertex()) {
+            for (int v: vertex()) {
                 sb.append("\n");
-                sb.append(p + ": ");
-                for (int q: adj(p)) sb.append(q + ", ");
+                sb.append(v + ": ");
+                for (int u: adj(v)) sb.append(u + ", ");
             }
             sb.append("}");
             return sb.toString();
@@ -55,16 +55,16 @@ public class Graph {
             pre = new LinkedList<>();
             post = new LinkedList<>();
             reversePost = new Stack<>();
-            for (int p: digraph.vertex())
-                if (!marked.contains(p)) dfs(digraph, p);
+            for (int v: digraph.vertex())
+                if (!marked.contains(v)) dfs(digraph, v);
         }
         
-        private void dfs(Digraph digraph, int p) {
-            marked.add(p);
-            pre.offer(p);
-            for (int q: digraph.adj(p)) if (!marked.contains(q)) dfs(digraph, q);
-            post.offer(p);
-            reversePost.push(p);
+        private void dfs(Digraph digraph, int v) {
+            marked.add(v);
+            pre.offer(v);
+            for (int u: digraph.adj(v)) if (!marked.contains(u)) dfs(digraph, u);
+            post.offer(v);
+            reversePost.push(v);
         }
 
         public Iterable<Integer> pre() { return pre; }
@@ -81,20 +81,20 @@ public class Graph {
             marked = new HashSet<>();
             inCycle = new HashSet<>();
             
-            for (int p: digraph.vertex()) if (!marked.contains(p)) dfs(digraph, p);
+            for (int v: digraph.vertex()) if (!marked.contains(v)) dfs(digraph, v);
         }
         
-        private void dfs(Digraph digraph, int p) {
-            marked.add(p);
-            inCycle.add(p);
-            for (int q: digraph.adj(p)) if (!marked.contains(q)) dfs(digraph, q);
-            else if (inCycle.contains(q)) {
+        private void dfs(Digraph digraph, int v) {
+            marked.add(v);
+            inCycle.add(v);
+            for (int u: digraph.adj(v)) if (!marked.contains(u)) dfs(digraph, u);
+            else if (inCycle.contains(u)) {
                 cycle = new Stack<>();
-                cycle.push(q);
+                cycle.push(u);
                 break;
             }
-            inCycle.remove(p);
-            if (cycle != null) cycle.push(p);
+            inCycle.remove(v);
+            if (cycle != null) cycle.push(v);
         }
         
         public boolean hasCycle() { return cycle != null; }
@@ -123,23 +123,23 @@ public class Graph {
             ids = new int[digraph.size()];
             
             DfsOrder dfsOrder = new DfsOrder(digraph.reverse());
-            for (int p: dfsOrder.reversePost()) if (!marked.contains(p)) {
-                System.out.println("->" + p);
-                dfs(digraph, p);
+            for (int v: dfsOrder.reversePost()) if (!marked.contains(v)) {
+                System.out.println("->" + v);
+                dfs(digraph, v);
                 count++;
             }
         }
         
-        private void dfs(Digraph digraph, int p) {
-            marked.add(p);
-            ids[p] = count;
-            for (int q: digraph.adj(p)) if (!marked.contains(q)) {
-                dfs(digraph, q);
+        private void dfs(Digraph digraph, int v) {
+            marked.add(v);
+            ids[v] = count;
+            for (int u: digraph.adj(v)) if (!marked.contains(u)) {
+                dfs(digraph, u);
             }
         }
         
         public int count() { return count; }
-        public int get(int p) { return ids[p]; }
+        public int get(int v) { return ids[v]; }
     }
     
     public static void main(String[] args) {
