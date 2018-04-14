@@ -1,6 +1,8 @@
 package graph.graph;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 import collections.Map;
@@ -17,26 +19,30 @@ public class Bigraph<Key> {
         marked = new HashSet<>();
         color = new SeparateChainingHashST<>();
         isBigraph = true;
-        for (Key v: graph.vertex()) if (!marked.contains(v) && isBigraph) dfs(graph, v);
+        for (Key v: graph.vertex()) if (!marked.contains(v) && isBigraph) bfs(graph, v);
     }
     
     public boolean isBigraph() {
         return isBigraph;
     }
     
-    private void dfs(Graph<Key> graph, Key v) {
-        if (!isBigraph) return;
-        marked.add(v);
-        if (!color.contains(v)) color.put(v, false);
-        for (Key w: graph.adj(v))
-            if (!marked.contains(w)) {
-                color.put(w, !color.get(v));
-                dfs(graph, w);
+    private void bfs(Graph<Key> graph, Key v) {
+        Queue<Key> queue = new LinkedList<>();
+        queue.add(v);
+        while (isBigraph && !queue.isEmpty()) {
+            v = queue.poll();
+            marked.add(v);
+            for (Key u: graph.adj(v)) if (!marked.contains(u)) {
+                color.put(u, !color.get(v));
+                queue.offer(u);
             }
-            else if (color.get(w) == color.get(v)) {
-                isBigraph = false;
-                return;
+            else {
+                if (color.get(v) == color.get(u)) {
+                    isBigraph = false;
+                    return;
+                }
             }
+        } 
     }
     
     public static void main(String[] args) {
